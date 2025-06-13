@@ -1,8 +1,7 @@
 import { useState, useCallback } from "react";
 import { type ManifestData } from "image-shield";
-import { readJsonFile } from "image-shield/dist/utils/file";
 import { getSelectedFinderTargetItems } from "../utils/helpers";
-import { restoreImagesWithKey, validateDecryptFiles } from "../lib/imageShield";
+import { readManifest, restoreImagesWithKey, validateDecryptFiles } from "../lib/imageShield";
 
 interface UseDecryptImagesResult {
   isLoading: boolean;
@@ -37,7 +36,7 @@ export function useDecryptImages(): UseDecryptImagesResult {
       setIsLoading(true);
       setError(undefined);
       const { manifestPath, imagePaths } = await getSelectedFinderTargetItems();
-      const manifest = await readJsonFile<ManifestData>(manifestPath);
+      const manifest = await readManifest(manifestPath);
       // If not secure, try to decrypt immediately
       if (!manifest.secure) {
         await handleDecrypt(manifest, imagePaths, undefined);
