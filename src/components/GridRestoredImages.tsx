@@ -3,12 +3,12 @@ import { generateFragmentFileName } from "image-shield/dist/utils/helpers";
 import { bufferToDataUrl } from "../utils/helpers";
 import type { ManifestData } from "image-shield";
 
-interface RestoredImagesGridProps {
+interface GridRestoredImagesProps {
   manifest: ManifestData;
   imageBuffers: Buffer[];
 }
 
-function RestoredImagesGrid({ manifest, imageBuffers }: RestoredImagesGridProps) {
+function GridRestoredImages({ manifest, imageBuffers }: GridRestoredImagesProps) {
   const { prefix } = manifest.config;
   const total = imageBuffers.length;
   return (
@@ -24,4 +24,4 @@ function RestoredImagesGrid({ manifest, imageBuffers }: RestoredImagesGridProps)
   );
 }
 
-export default RestoredImagesGrid;
+export default GridRestoredImages;

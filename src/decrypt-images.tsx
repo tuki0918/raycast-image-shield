@@ -2,7 +2,7 @@ import { Detail, showToast, Toast } from "@raycast/api";
 import { usePromise } from "@raycast/utils";
 import PasswordForm from "./components/PasswordForm";
 import GridLoadingView from "./components/GridLoadingView";
-import RestoredImagesGrid from "./components/RestoredImagesGrid";
+import GridRestoredImages from "./components/GridRestoredImages";
 import { useDecryptImages } from "./hooks/useDecryptImages";
 
 export default function Command() {
@@ -33,7 +33,7 @@ export default function Command() {
 
   // Restored images grid
   if (data) {
-    return <RestoredImagesGrid manifest={data.manifest} imageBuffers={data.imageBuffers} />;
+    return <GridRestoredImages manifest={data.manifest} imageBuffers={data.imageBuffers} />;
   }
 
   // Default view
