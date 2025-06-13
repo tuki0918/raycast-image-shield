@@ -6,8 +6,7 @@ export function bufferToDataUrl(buffer: Buffer, mimeType = "image/png") {
   return `data:${mimeType};base64,${base64}`;
 }
 
-export async function getSelectedFinderTargetItems() {
-  const filePaths = (await getSelectedFinderItems()).map((f) => f.path);
+export function findManifestAndImages(filePaths: string[]) {
   const manifestPath = filePaths.find((path: string) => path.endsWith(MANIFEST_FILE_NAME));
   const imagePaths = filePaths.filter((path: string) => path !== manifestPath).sort();
 
@@ -23,4 +22,9 @@ export async function getSelectedFinderTargetItems() {
     manifestPath,
     imagePaths,
   };
+}
+
+export async function getSelectedFinderTargetItems() {
+  const filePaths = (await getSelectedFinderItems()).map((f) => f.path);
+  return findManifestAndImages(filePaths);
 }
