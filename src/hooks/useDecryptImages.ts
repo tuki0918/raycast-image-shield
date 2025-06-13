@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
-import { ImageRestorer, type ManifestData } from "image-shield";
-import { verifySecretKey } from "image-shield/dist/utils/helpers";
+import { type ManifestData } from "image-shield";
 import { readJsonFile } from "image-shield/dist/utils/file";
 import { getSelectedFinderTargetItems } from "../utils/helpers";
+import { restoreImagesWithKey, validateDecryptFiles } from "../lib/imageShield";
 
 interface UseDecryptImagesResult {
   isLoading: boolean;
@@ -29,13 +29,6 @@ export function useDecryptImages(): UseDecryptImagesResult {
   const handleError = (e: unknown) => {
     setError(String(e));
     setIsLoading(false);
-  };
-
-  // Validation logic for decryption parameters
-  const validateDecryptParams = (manifest?: ManifestData, imagePaths?: string[], secretKey?: string) => {
-    if (!manifest) throw new Error("manifest is required");
-    if (manifest.secure && !secretKey) throw new Error("secret key is required");
-    if (!imagePaths || imagePaths.length === 0) throw new Error("image paths are required");
   };
 
   // Initialization logic
@@ -65,11 +58,10 @@ export function useDecryptImages(): UseDecryptImagesResult {
       try {
         const manifest = manifestArg || selectedManifest;
         const imagePaths = imagePathsArg || selectedImagePaths;
-        validateDecryptParams(manifest, imagePaths, secretKey);
-        const restorer = new ImageRestorer(verifySecretKey(secretKey));
-        const imageBuffers = await restorer.restoreImages(imagePaths!, manifest!);
-        setData({ manifest: manifest!, imageBuffers });
-        setSecretKey(secretKey);
+        const validated = validateDecryptFiles(manifest, imagePaths, secretKey);
+        const imageBuffers = await restoreImagesWithKey(validated.imagePaths, validated.manifest, validated.secretKey);
+        setData({ manifest: validated.manifest, imageBuffers });
+        setSecretKey(validated.secretKey);
         setIsLoading(false);
       } catch (e) {
         handleError(e);
