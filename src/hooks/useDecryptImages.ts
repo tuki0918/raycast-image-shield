@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
+import { getSelectedFinderItems } from "@raycast/api";
 import { type ManifestData } from "image-shield";
-import { findManifestAndImages, getSelectedFinderTargetItems } from "../utils/helpers";
+import { findManifestAndImages } from "../utils/helpers";
 import { readManifest, restoreImagesWithKey, validateDecryptFiles } from "../lib/imageShield";
 
 interface UseDecryptImagesResult {
@@ -33,7 +34,14 @@ export function useDecryptImages(): UseDecryptImagesResult {
     try {
       setIsLoading(true);
       setError(undefined);
-      const { manifestPath, imagePaths } = await getSelectedFinderTargetItems();
+
+      const filePaths = (await getSelectedFinderItems()).map((f) => f.path);
+      if (filePaths.length === 0) {
+        setIsLoading(false);
+        return;
+      }
+
+      const { manifestPath, imagePaths } = findManifestAndImages(filePaths);
       const manifest = await readManifest(manifestPath);
       // If not secure, try to decrypt immediately
       if (!manifest.secure) {

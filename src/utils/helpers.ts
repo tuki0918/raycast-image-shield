@@ -1,4 +1,3 @@
-import { getSelectedFinderItems } from "@raycast/api";
 import { MANIFEST_FILE_NAME } from "../constraints";
 
 export function bufferToDataUrl(buffer: Buffer, mimeType = "image/png") {
@@ -22,9 +21,4 @@ export function findManifestAndImages(filePaths: string[]) {
     manifestPath,
     imagePaths,
   };
-}
-
-export async function getSelectedFinderTargetItems() {
-  const filePaths = (await getSelectedFinderItems()).map((f) => f.path);
-  return findManifestAndImages(filePaths);
 }
