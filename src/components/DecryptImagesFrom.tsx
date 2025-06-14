@@ -1,42 +1,12 @@
 import { Form, Action, ActionPanel, Toast, showToast } from "@raycast/api";
-import { findManifestAndImages } from "../utils/helpers";
-import { readManifest, restoreImagesWithKey, validateDecryptFiles } from "../lib/imageShield";
-import { useState } from "react";
-import { type ManifestData } from "image-shield";
 import GridLoadingView from "./GridLoadingView";
 import GridRestoredImages from "./GridRestoredImages";
-
-interface Values {
-  folders: string[];
-  password?: string;
-}
+import PasswordForm from "./PasswordForm";
+import { useDecryptImages } from "../hooks/useDecryptImages";
 
 function DecryptImagesFrom() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
-  const [data, setData] = useState<{ manifest: ManifestData; imageBuffers: Buffer[] } | undefined>();
-
-  // Error handler
-  const handleError = (e: unknown) => {
-    setError(String(e));
-    setIsLoading(false);
-  };
-
-  async function handleSubmit(values: Values) {
-    setIsLoading(true);
-    setError(undefined);
-    try {
-      const { folders, password } = values;
-      const { manifestPath, imagePaths } = findManifestAndImages(folders);
-      const manifest = await readManifest(manifestPath);
-      const validated = validateDecryptFiles(manifest, imagePaths, password);
-      const imageBuffers = await restoreImagesWithKey(validated.imagePaths, validated.manifest, validated.secretKey);
-      setData({ manifest: validated.manifest, imageBuffers });
-      setIsLoading(false);
-    } catch (e) {
-      handleError(e);
-    }
-  }
+  const { isLoading, error, data, selectedManifest, selectedImagePaths, handleDecrypt, handleSubmit } =
+    useDecryptImages();
 
   // Error toast
   if (error) {
@@ -50,6 +20,11 @@ function DecryptImagesFrom() {
   // Loading
   if (isLoading) {
     return <GridLoadingView title="decrypting..." />;
+  }
+
+  // Password form
+  if (selectedManifest?.secure && !data) {
+    return <PasswordForm onSubmit={(secretKey) => handleDecrypt(selectedManifest, selectedImagePaths, secretKey)} />;
   }
 
   // Restored images grid
@@ -72,7 +47,6 @@ function DecryptImagesFrom() {
         // manifest.json + encrypted images
       />
       <Form.FilePicker id="folders" allowMultipleSelection={true} canChooseFiles={true} />
-      <Form.PasswordField id="password" title="Password" placeholder="Enter password" />
     </Form>
   );
 }
