@@ -1,7 +1,11 @@
 import { Form, ActionPanel, Action } from "@raycast/api";
 import { useState } from "react";
 
-function PasswordForm({ onSubmit }: { onSubmit: (password: string) => void }) {
+interface PasswordFormProps {
+  onSubmit: (password: string) => void;
+}
+
+function PasswordForm({ onSubmit }: PasswordFormProps) {
   const [password, setPassword] = useState("");
   return (
     <Form
@@ -13,10 +17,10 @@ function PasswordForm({ onSubmit }: { onSubmit: (password: string) => void }) {
     >
       <Form.PasswordField
         id="password"
-        title="Secret Key"
+        title="Password"
         value={password}
         onChange={setPassword}
-        placeholder="Enter secret key"
+        placeholder="Enter password"
       />
     </Form>
   );
