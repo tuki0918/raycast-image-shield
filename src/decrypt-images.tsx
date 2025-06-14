@@ -11,7 +11,7 @@ export default function Command() {
     useDecryptImages();
 
   // Initialize
-  usePromise(async () => await initialize(), []);
+  const { isLoading: isInitializing } = usePromise(async () => await initialize(), []);
 
   // Error toast
   if (error) {
@@ -22,8 +22,8 @@ export default function Command() {
     });
   }
 
-  // Loading
-  if (isLoading) {
+  // Loading or initializing
+  if (isLoading || isInitializing) {
     return <GridLoadingView title="decrypting..." />;
   }
 
