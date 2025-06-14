@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { type ManifestData } from "image-shield";
-import { getSelectedFinderTargetItems } from "../utils/helpers";
+import { findManifestAndImages, getSelectedFinderTargetItems } from "../utils/helpers";
 import { readManifest, restoreImagesWithKey, validateDecryptFiles } from "../lib/imageShield";
 
 interface UseDecryptImagesResult {
@@ -12,6 +12,7 @@ interface UseDecryptImagesResult {
   initialize: () => Promise<void>;
   handleDecrypt: (manifestArg?: ManifestData, imagePathsArg?: string[], secretKey?: string) => Promise<void>;
   setError: (err: string | undefined) => void;
+  handleSubmit: (values: { folders: string[] }) => Promise<void>;
 }
 
 export function useDecryptImages(): UseDecryptImagesResult {
@@ -46,6 +47,25 @@ export function useDecryptImages(): UseDecryptImagesResult {
     }
   };
 
+  async function handleSubmit(values: { folders: string[] }) {
+    try {
+      setIsLoading(true);
+      setError(undefined);
+      const { folders } = values;
+      const { manifestPath, imagePaths } = findManifestAndImages(folders);
+      const manifest = await readManifest(manifestPath);
+      // If not secure, try to decrypt immediately
+      if (!manifest.secure) {
+        await handleDecrypt(manifest, imagePaths, undefined);
+      }
+      setSelectedManifest(manifest);
+      setSelectedImagePaths(imagePaths);
+      setIsLoading(false);
+    } catch (e) {
+      handleError(e);
+    }
+  }
+
   // Decrypt handler
   const handleDecrypt = useCallback(
     async (manifestArg?: ManifestData, imagePathsArg?: string[], secretKey?: string) => {
@@ -74,5 +94,6 @@ export function useDecryptImages(): UseDecryptImagesResult {
     initialize,
     handleDecrypt,
     setError,
+    handleSubmit,
   };
 }
