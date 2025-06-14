@@ -6,9 +6,10 @@ import type { ManifestData } from "image-shield";
 interface GridRestoredImagesProps {
   manifest: ManifestData;
   imageBuffers: Buffer[];
+  workdir?: string;
 }
 
-function GridRestoredImages({ manifest, imageBuffers }: GridRestoredImagesProps) {
+function GridRestoredImages({ manifest, imageBuffers, workdir }: GridRestoredImagesProps) {
   const { prefix } = manifest.config;
   const total = imageBuffers.length;
   return (

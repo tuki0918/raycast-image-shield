@@ -7,7 +7,7 @@ import { useDecryptImages } from "./hooks/useDecryptImages";
 import DecryptImagesFrom from "./components/DecryptImagesFrom";
 
 export default function Command() {
-  const { isLoading, error, data, selectedManifest, selectedImagePaths, initialize, handleDecrypt } =
+  const { isLoading, error, data, selectedManifest, selectedImagePaths, selectedWorkdir, initialize, handleDecrypt } =
     useDecryptImages();
 
   // Initialize
@@ -29,12 +29,16 @@ export default function Command() {
 
   // Password form
   if (selectedManifest?.secure && !data) {
-    return <PasswordForm onSubmit={(secretKey) => handleDecrypt(selectedManifest, selectedImagePaths, secretKey)} />;
+    return (
+      <PasswordForm
+        onSubmit={(secretKey) => handleDecrypt(selectedManifest, selectedImagePaths, selectedWorkdir, secretKey)}
+      />
+    );
   }
 
   // Restored images grid
   if (data) {
-    return <GridRestoredImages manifest={data.manifest} imageBuffers={data.imageBuffers} />;
+    return <GridRestoredImages manifest={data.manifest} imageBuffers={data.imageBuffers} workdir={data.workdir} />;
   }
 
   // Default view

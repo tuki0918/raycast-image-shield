@@ -5,7 +5,7 @@ import PasswordForm from "./PasswordForm";
 import { useDecryptImages } from "../hooks/useDecryptImages";
 
 function DecryptImagesFrom() {
-  const { isLoading, error, data, selectedManifest, selectedImagePaths, handleDecrypt, handleSubmit } =
+  const { isLoading, error, data, selectedManifest, selectedImagePaths, selectedWorkdir, handleDecrypt, handleSubmit } =
     useDecryptImages();
 
   // Error toast
@@ -24,12 +24,16 @@ function DecryptImagesFrom() {
 
   // Password form
   if (selectedManifest?.secure && !data) {
-    return <PasswordForm onSubmit={(secretKey) => handleDecrypt(selectedManifest, selectedImagePaths, secretKey)} />;
+    return (
+      <PasswordForm
+        onSubmit={(secretKey) => handleDecrypt(selectedManifest, selectedImagePaths, selectedWorkdir, secretKey)}
+      />
+    );
   }
 
   // Restored images grid
   if (data) {
-    return <GridRestoredImages manifest={data.manifest} imageBuffers={data.imageBuffers} />;
+    return <GridRestoredImages manifest={data.manifest} imageBuffers={data.imageBuffers} workdir={data.workdir} />;
   }
 
   // Default view
