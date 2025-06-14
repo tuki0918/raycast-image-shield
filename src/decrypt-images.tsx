@@ -1,9 +1,10 @@
-import { Detail, showToast, Toast } from "@raycast/api";
+import { showToast, Toast } from "@raycast/api";
 import { usePromise } from "@raycast/utils";
 import PasswordForm from "./components/PasswordForm";
 import GridLoadingView from "./components/GridLoadingView";
 import GridRestoredImages from "./components/GridRestoredImages";
 import { useDecryptImages } from "./hooks/useDecryptImages";
+import DecryptImagesFrom from "./components/DecryptImagesFrom";
 
 export default function Command() {
   const { isLoading, error, data, selectedManifest, selectedImagePaths, secretKey, initialize, handleDecrypt } =
@@ -37,5 +38,5 @@ export default function Command() {
   }
 
   // Default view
-  return <Detail markdown="please select images" />;
+  return <DecryptImagesFrom />;
 }
