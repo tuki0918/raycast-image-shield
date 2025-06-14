@@ -7,7 +7,7 @@ import { useDecryptImages } from "./hooks/useDecryptImages";
 import DecryptImagesFrom from "./components/DecryptImagesFrom";
 
 export default function Command() {
-  const { isLoading, error, data, selectedManifest, selectedImagePaths, secretKey, initialize, handleDecrypt } =
+  const { isLoading, error, data, selectedManifest, selectedImagePaths, initialize, handleDecrypt } =
     useDecryptImages();
 
   // Initialize
@@ -28,7 +28,7 @@ export default function Command() {
   }
 
   // Password form
-  if (selectedManifest?.secure && !secretKey) {
+  if (selectedManifest?.secure && !data) {
     return <PasswordForm onSubmit={(secretKey) => handleDecrypt(selectedManifest, selectedImagePaths, secretKey)} />;
   }
 

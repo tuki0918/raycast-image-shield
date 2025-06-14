@@ -9,10 +9,8 @@ interface UseDecryptImagesResult {
   data?: { manifest: ManifestData; imageBuffers: Buffer[] };
   selectedManifest?: ManifestData;
   selectedImagePaths?: string[];
-  secretKey?: string;
   initialize: () => Promise<void>;
   handleDecrypt: (manifestArg?: ManifestData, imagePathsArg?: string[], secretKey?: string) => Promise<void>;
-  setSecretKey: (key: string | undefined) => void;
   setError: (err: string | undefined) => void;
 }
 
@@ -22,7 +20,6 @@ export function useDecryptImages(): UseDecryptImagesResult {
   const [data, setData] = useState<{ manifest: ManifestData; imageBuffers: Buffer[] } | undefined>();
   const [selectedManifest, setSelectedManifest] = useState<ManifestData | undefined>();
   const [selectedImagePaths, setSelectedImagePaths] = useState<string[] | undefined>();
-  const [secretKey, setSecretKey] = useState<string | undefined>();
 
   // Error handler
   const handleError = (e: unknown) => {
@@ -60,7 +57,6 @@ export function useDecryptImages(): UseDecryptImagesResult {
         const validated = validateDecryptFiles(manifest, imagePaths, secretKey);
         const imageBuffers = await restoreImagesWithKey(validated.imagePaths, validated.manifest, validated.secretKey);
         setData({ manifest: validated.manifest, imageBuffers });
-        setSecretKey(validated.secretKey);
         setIsLoading(false);
       } catch (e) {
         handleError(e);
@@ -75,10 +71,8 @@ export function useDecryptImages(): UseDecryptImagesResult {
     data,
     selectedManifest,
     selectedImagePaths,
-    secretKey,
     initialize,
     handleDecrypt,
-    setSecretKey,
     setError,
   };
 }
