@@ -3,10 +3,26 @@ import GridLoadingView from "./GridLoadingView";
 import GridRestoredImages from "./GridRestoredImages";
 import PasswordForm from "./PasswordForm";
 import { useDecryptImages } from "../hooks/useDecryptImages";
+import { FormValidation, useForm } from "@raycast/utils";
 
 function DecryptImagesFrom() {
-  const { isLoading, error, data, selectedManifest, selectedImagePaths, selectedWorkdir, handleDecrypt, handleSubmit } =
-    useDecryptImages();
+  const {
+    isLoading,
+    error,
+    data,
+    selectedManifest,
+    selectedImagePaths,
+    selectedWorkdir,
+    handleDecrypt,
+    handleFormSubmit,
+  } = useDecryptImages();
+
+  const { handleSubmit, itemProps } = useForm<{ folders: string[] }>({
+    onSubmit: handleFormSubmit,
+    validation: {
+      folders: FormValidation.Required,
+    },
+  });
 
   // Error toast
   if (error) {
@@ -46,7 +62,7 @@ function DecryptImagesFrom() {
       }
     >
       <Form.Description title="How to use" text={"Please select the manifest file and the encrypted images."} />
-      <Form.FilePicker id="folders" allowMultipleSelection={true} canChooseFiles={true} />
+      <Form.FilePicker allowMultipleSelection={true} canChooseFiles={true} {...itemProps.folders} />
     </Form>
   );
 }

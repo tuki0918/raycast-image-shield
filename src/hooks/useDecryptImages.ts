@@ -20,7 +20,7 @@ interface UseDecryptImagesResult {
     secretKey?: string,
   ) => Promise<void>;
   setError: (err: string | undefined) => void;
-  handleSubmit: (values: { folders: string[] }) => Promise<void>;
+  handleFormSubmit: (values: { folders: string[] }) => Promise<void>;
 }
 
 export function useDecryptImages(): UseDecryptImagesResult {
@@ -54,15 +54,16 @@ export function useDecryptImages(): UseDecryptImagesResult {
       const { manifestPath, imagePaths } = findManifestAndImages(filePaths);
       const manifest = await readManifest(manifestPath);
       const workdir = dirname(manifestPath);
+      const validated = validateDecryptFiles(manifest, imagePaths);
 
       // If not secure, try to decrypt immediately
       if (!manifest.secure) {
-        await handleDecrypt(manifest, imagePaths, workdir, undefined);
+        await handleDecrypt(validated.manifest, validated.imagePaths, workdir, undefined);
       }
 
       setSelectedWorkdir(workdir);
-      setSelectedManifest(manifest);
-      setSelectedImagePaths(imagePaths);
+      setSelectedManifest(validated.manifest);
+      setSelectedImagePaths(validated.imagePaths);
       setIsLoading(false);
     } catch (e) {
       handleError(e);
@@ -70,7 +71,7 @@ export function useDecryptImages(): UseDecryptImagesResult {
   };
 
   // Form submit handler
-  async function handleSubmit(values: { folders: string[] }) {
+  async function handleFormSubmit(values: { folders: string[] }) {
     try {
       setIsLoading(true);
       setError(undefined);
@@ -78,15 +79,16 @@ export function useDecryptImages(): UseDecryptImagesResult {
       const { manifestPath, imagePaths } = findManifestAndImages(folders);
       const manifest = await readManifest(manifestPath);
       const workdir = dirname(manifestPath);
+      const validated = validateDecryptFiles(manifest, imagePaths);
 
       // If not secure, try to decrypt immediately
       if (!manifest.secure) {
-        await handleDecrypt(manifest, imagePaths, workdir, undefined);
+        await handleDecrypt(validated.manifest, validated.imagePaths, workdir, undefined);
       }
 
       setSelectedWorkdir(workdir);
-      setSelectedManifest(manifest);
-      setSelectedImagePaths(imagePaths);
+      setSelectedManifest(validated.manifest);
+      setSelectedImagePaths(validated.imagePaths);
       setIsLoading(false);
     } catch (e) {
       handleError(e);
@@ -102,8 +104,8 @@ export function useDecryptImages(): UseDecryptImagesResult {
         const manifest = manifestArg || selectedManifest;
         const imagePaths = imagePathsArg || selectedImagePaths;
         const workdir = workdirArg || selectedWorkdir;
-        const validated = validateDecryptFiles(manifest, imagePaths, secretKey);
-        const imageBuffers = await restoreImagesWithKey(validated.imagePaths, validated.manifest, validated.secretKey);
+        const validated = validateDecryptFiles(manifest, imagePaths);
+        const imageBuffers = await restoreImagesWithKey(validated.imagePaths, validated.manifest, secretKey);
         setData({ manifest: validated.manifest, imageBuffers, workdir });
         setIsLoading(false);
       } catch (e) {
@@ -123,6 +125,6 @@ export function useDecryptImages(): UseDecryptImagesResult {
     initialize,
     handleDecrypt,
     setError,
-    handleSubmit,
+    handleFormSubmit,
   };
 }
