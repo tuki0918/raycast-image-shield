@@ -1,7 +1,7 @@
-import { Action, ActionPanel, Grid, Icon } from "@raycast/api";
+import { Action, ActionPanel, Grid, Icon, showToast, Toast } from "@raycast/api";
 import { generateFragmentFileName } from "image-shield/dist/utils/helpers";
-import { bufferToDataUrl, writeRestoredImage } from "../utils/helpers";
 import type { ManifestData } from "image-shield";
+import { bufferToDataUrl, writeRestoredImage } from "../utils/helpers";
 
 interface GridRestoredImagesProps {
   manifest: ManifestData;
@@ -62,6 +62,11 @@ function DownloadImageAction({
       icon={{ source: Icon.Download }}
       onAction={async () => {
         await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
+        await showToast({
+          title: "Downloaded",
+          message: "Image downloaded successfully.",
+          style: Toast.Style.Success,
+        });
       }}
     />
   );
@@ -86,6 +91,11 @@ function DownloadAllImagesAction({
         imageBuffers.forEach(async (imageBuffer, i) => {
           const fileName = generateFragmentFileName(prefix, i, total);
           await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
+        });
+        await showToast({
+          title: "Downloaded",
+          message: "All images downloaded successfully.",
+          style: Toast.Style.Success,
         });
       }}
     />
