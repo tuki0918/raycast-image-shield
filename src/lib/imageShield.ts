@@ -7,9 +7,11 @@ export async function readManifest(manifestPath: string) {
 }
 
 export function validateDecryptFiles(manifest?: ManifestData, imagePaths?: string[], secretKey?: string) {
-  if (!manifest) throw new Error("manifest is required");
-  if (manifest.secure && !secretKey) throw new Error("secret key is required");
-  if (!imagePaths || imagePaths.length === 0) throw new Error("image paths are required");
+  if (!manifest) throw new Error("Manifest file is required");
+  if (manifest.secure && !secretKey) throw new Error("Password is required to decrypt the encrypted images");
+  if (!imagePaths || imagePaths.length === 0) throw new Error("Image files are required");
+  if (manifest.images.length !== imagePaths.length)
+    throw new Error(`Number of image files does not match: ${imagePaths.length} / ${manifest.images.length}`);
   return { manifest, imagePaths, secretKey };
 }
 
