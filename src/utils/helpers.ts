@@ -14,11 +14,11 @@ export function findManifestAndImages(filePaths: string[]) {
   const imagePaths = filePaths.filter((path: string) => path !== manifestPath).sort();
 
   if (!manifestPath) {
-    throw new Error(`${MANIFEST_FILE_NAME} not found`);
+    throw new Error(`${MANIFEST_FILE_NAME} is required`);
   }
 
   if (imagePaths.length === 0) {
-    throw new Error("fragment images not found");
+    throw new Error("Target image files are required");
   }
 
   return {
