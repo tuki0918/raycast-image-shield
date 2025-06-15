@@ -14,16 +14,16 @@ export async function findManifestAndImages(filePaths: string[]) {
   const imagePaths = filePaths.filter((path: string) => path !== manifestPath).sort();
 
   if (!manifestPath) {
-    throw new Error(`${MANIFEST_FILE_NAME} is required`);
+    throw new Error(`No "${MANIFEST_FILE_NAME}" file selected.`);
   }
 
   if (imagePaths.length === 0) {
-    throw new Error("Target image files are required");
+    throw new Error("No image files selected.");
   }
 
   for (const filePath of filePaths) {
     if (!(await exists(filePath))) {
-      throw new Error(`File "${filePath}" does not exist`);
+      throw new Error(`"${filePath}" does not exist.`);
     }
   }
 
