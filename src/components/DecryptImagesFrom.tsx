@@ -6,16 +6,7 @@ import { useDecryptImages } from "../hooks/useDecryptImages";
 import { FormValidation, useForm } from "@raycast/utils";
 
 function DecryptImagesFrom() {
-  const {
-    isLoading,
-    error,
-    data,
-    selectedManifest,
-    selectedImagePaths,
-    selectedWorkdir,
-    handleDecrypt,
-    handleFormSubmit,
-  } = useDecryptImages();
+  const { isLoading, error, data, selectedFiles, handleDecrypt, handleFormSubmit } = useDecryptImages();
 
   const { handleSubmit, itemProps } = useForm<{ folders: string[] }>({
     onSubmit: handleFormSubmit,
@@ -39,10 +30,12 @@ function DecryptImagesFrom() {
   }
 
   // Password form
-  if (selectedManifest?.secure && !data) {
+  if (selectedFiles.manifest?.secure && !data) {
     return (
       <PasswordForm
-        onSubmit={(secretKey) => handleDecrypt(selectedManifest, selectedImagePaths, selectedWorkdir, secretKey)}
+        onSubmit={(secretKey) =>
+          handleDecrypt(selectedFiles.manifest, selectedFiles.imagePaths, selectedFiles.workdir, secretKey)
+        }
       />
     );
   }

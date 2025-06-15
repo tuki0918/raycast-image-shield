@@ -3,15 +3,18 @@ import { getSelectedFinderItems } from "@raycast/api";
 import { type ManifestData } from "image-shield";
 import { findManifestAndImages } from "../utils/helpers";
 import { readManifest, restoreImagesWithKey, validateDecryptFiles } from "../lib/imageShield";
-import { dirname } from "node:path";
+
+interface SelectedFiles {
+  workdir?: string;
+  manifest?: ManifestData;
+  imagePaths?: string[];
+}
 
 interface UseDecryptImagesResult {
   isLoading: boolean;
   error?: string;
   data?: { manifest: ManifestData; imageBuffers: Buffer[]; workdir: string | undefined };
-  selectedManifest?: ManifestData;
-  selectedImagePaths?: string[];
-  selectedWorkdir?: string;
+  selectedFiles: SelectedFiles;
   initialize: () => Promise<void>;
   handleDecrypt: (
     manifestArg?: ManifestData,
@@ -29,9 +32,7 @@ export function useDecryptImages(): UseDecryptImagesResult {
   const [data, setData] = useState<
     { manifest: ManifestData; imageBuffers: Buffer[]; workdir: string | undefined } | undefined
   >();
-  const [selectedWorkdir, setSelectedWorkdir] = useState<string | undefined>();
-  const [selectedManifest, setSelectedManifest] = useState<ManifestData | undefined>();
-  const [selectedImagePaths, setSelectedImagePaths] = useState<string[] | undefined>();
+  const [selectedFiles, setSelectedFiles] = useState<SelectedFiles>({});
 
   // Error handler
   const handleError = (e: unknown) => {
@@ -51,9 +52,8 @@ export function useDecryptImages(): UseDecryptImagesResult {
         return;
       }
 
-      const { manifestPath, imagePaths } = findManifestAndImages(filePaths);
+      const { manifestPath, imagePaths, workdir } = await findManifestAndImages(filePaths);
       const manifest = await readManifest(manifestPath);
-      const workdir = dirname(manifestPath);
       const validated = validateDecryptFiles(manifest, imagePaths);
 
       // If not secure, try to decrypt immediately
@@ -61,9 +61,11 @@ export function useDecryptImages(): UseDecryptImagesResult {
         await handleDecrypt(validated.manifest, validated.imagePaths, workdir, undefined);
       }
 
-      setSelectedWorkdir(workdir);
-      setSelectedManifest(validated.manifest);
-      setSelectedImagePaths(validated.imagePaths);
+      setSelectedFiles({
+        workdir,
+        manifest: validated.manifest,
+        imagePaths: validated.imagePaths,
+      });
       setIsLoading(false);
     } catch (e) {
       handleError(e);
@@ -76,9 +78,8 @@ export function useDecryptImages(): UseDecryptImagesResult {
       setIsLoading(true);
       setError(undefined);
       const { folders } = values;
-      const { manifestPath, imagePaths } = findManifestAndImages(folders);
+      const { manifestPath, imagePaths, workdir } = await findManifestAndImages(folders);
       const manifest = await readManifest(manifestPath);
-      const workdir = dirname(manifestPath);
       const validated = validateDecryptFiles(manifest, imagePaths);
 
       // If not secure, try to decrypt immediately
@@ -86,9 +87,11 @@ export function useDecryptImages(): UseDecryptImagesResult {
         await handleDecrypt(validated.manifest, validated.imagePaths, workdir, undefined);
       }
 
-      setSelectedWorkdir(workdir);
-      setSelectedManifest(validated.manifest);
-      setSelectedImagePaths(validated.imagePaths);
+      setSelectedFiles({
+        workdir,
+        manifest: validated.manifest,
+        imagePaths: validated.imagePaths,
+      });
       setIsLoading(false);
     } catch (e) {
       handleError(e);
@@ -101,9 +104,9 @@ export function useDecryptImages(): UseDecryptImagesResult {
       setIsLoading(true);
       setError(undefined);
       try {
-        const manifest = manifestArg || selectedManifest;
-        const imagePaths = imagePathsArg || selectedImagePaths;
-        const workdir = workdirArg || selectedWorkdir;
+        const manifest = manifestArg || selectedFiles.manifest;
+        const imagePaths = imagePathsArg || selectedFiles.imagePaths;
+        const workdir = workdirArg || selectedFiles.workdir;
         const validated = validateDecryptFiles(manifest, imagePaths);
         const imageBuffers = await restoreImagesWithKey(validated.imagePaths, validated.manifest, secretKey);
         setData({ manifest: validated.manifest, imageBuffers, workdir });
@@ -112,16 +115,14 @@ export function useDecryptImages(): UseDecryptImagesResult {
         handleError(e);
       }
     },
-    [selectedManifest, selectedImagePaths, selectedWorkdir],
+    [selectedFiles],
   );
 
   return {
     isLoading,
     error,
     data,
-    selectedManifest,
-    selectedImagePaths,
-    selectedWorkdir,
+    selectedFiles,
     initialize,
     handleDecrypt,
     setError,

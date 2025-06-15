@@ -7,8 +7,7 @@ import { useDecryptImages } from "./hooks/useDecryptImages";
 import DecryptImagesFrom from "./components/DecryptImagesFrom";
 
 export default function Command() {
-  const { isLoading, error, data, selectedManifest, selectedImagePaths, selectedWorkdir, initialize, handleDecrypt } =
-    useDecryptImages();
+  const { isLoading, error, data, selectedFiles, initialize, handleDecrypt } = useDecryptImages();
 
   // Initialize (if command is called with selected items from Finder)
   const { isLoading: isInitializing } = usePromise(async () => await initialize(), []);
@@ -28,10 +27,12 @@ export default function Command() {
   }
 
   // Password form
-  if (selectedManifest?.secure && !data) {
+  if (selectedFiles.manifest?.secure && !data) {
     return (
       <PasswordForm
-        onSubmit={(secretKey) => handleDecrypt(selectedManifest, selectedImagePaths, selectedWorkdir, secretKey)}
+        onSubmit={(secretKey) =>
+          handleDecrypt(selectedFiles.manifest, selectedFiles.imagePaths, selectedFiles.workdir, secretKey)
+        }
       />
     );
   }
