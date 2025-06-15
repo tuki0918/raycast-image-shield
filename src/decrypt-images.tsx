@@ -1,13 +1,15 @@
-import { showToast, Toast } from "@raycast/api";
+import { PopToRootType, showHUD, showToast, Toast } from "@raycast/api";
 import { usePromise } from "@raycast/utils";
 import PasswordForm from "./components/PasswordForm";
 import GridLoadingView from "./components/GridLoadingView";
 import GridRestoredImages from "./components/GridRestoredImages";
 import { useDecryptImages } from "./hooks/useDecryptImages";
 import DecryptImagesFrom from "./components/DecryptImagesFrom";
+import { generateFragmentFileName } from "image-shield/dist/utils/helpers";
+import { writeRestoredImage } from "./utils/helpers";
 
 export default function Command() {
-  const { isLoading, error, data, selectedFiles, initialize, handleDecrypt } = useDecryptImages();
+  const { isLoading, isInstantCall, error, data, selectedFiles, initialize, handleDecrypt } = useDecryptImages();
 
   // Initialize (if command is called with selected items from Finder)
   const { isLoading: isInitializing } = usePromise(async () => await initialize(), []);
@@ -16,7 +18,7 @@ export default function Command() {
   if (error) {
     showToast({
       style: Toast.Style.Failure,
-      title: "decrypting failed",
+      title: "Decrypting failed.",
       message: error,
     });
   }
@@ -35,6 +37,19 @@ export default function Command() {
         }
       />
     );
+  }
+
+  // No GUI for restored images
+  if (isInstantCall && data) {
+    const { manifest, imageBuffers, workdir } = data;
+    const { prefix } = manifest.config;
+    const total = imageBuffers.length;
+    imageBuffers.forEach(async (imageBuffer, i) => {
+      const fileName = generateFragmentFileName(prefix, i, total);
+      await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
+    });
+    showHUD("🎉 All images decrypted successfully!", { clearRootSearch: true, popToRootType: PopToRootType.Immediate });
+    return;
   }
 
   // Restored images grid

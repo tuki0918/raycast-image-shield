@@ -19,7 +19,7 @@ function DecryptImagesFrom() {
   if (error) {
     showToast({
       style: Toast.Style.Failure,
-      title: "decrypting failed",
+      title: "Decrypting failed.",
       message: error,
     });
   }

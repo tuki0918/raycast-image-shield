@@ -12,6 +12,7 @@ interface SelectedFiles {
 
 interface UseDecryptImagesResult {
   isLoading: boolean;
+  isInstantCall: boolean;
   error?: string;
   data?: { manifest: ManifestData; imageBuffers: Buffer[]; workdir: string | undefined };
   selectedFiles: SelectedFiles;
@@ -28,6 +29,7 @@ interface UseDecryptImagesResult {
 
 export function useDecryptImages(): UseDecryptImagesResult {
   const [isLoading, setIsLoading] = useState(false);
+  const [isInstantCall, setIsInstantCall] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [data, setData] = useState<
     { manifest: ManifestData; imageBuffers: Buffer[]; workdir: string | undefined } | undefined
@@ -51,6 +53,9 @@ export function useDecryptImages(): UseDecryptImagesResult {
         setIsLoading(false);
         return;
       }
+
+      // If the command is called with selected items from Finder, set isInstantCall to true
+      setIsInstantCall(true);
 
       const { manifestPath, imagePaths, workdir } = await findManifestAndImages(filePaths);
       const manifest = await readManifest(manifestPath);
@@ -120,6 +125,7 @@ export function useDecryptImages(): UseDecryptImagesResult {
 
   return {
     isLoading,
+    isInstantCall,
     error,
     data,
     selectedFiles,
