@@ -35,7 +35,7 @@ function DecryptImagesFrom() {
 
   // Loading
   if (isLoading) {
-    return <GridLoadingView title="decrypting..." />;
+    return <GridLoadingView title="Loading..." />;
   }
 
   // Password form
