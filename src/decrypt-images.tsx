@@ -10,7 +10,7 @@ export default function Command() {
   const { isLoading, error, data, selectedManifest, selectedImagePaths, selectedWorkdir, initialize, handleDecrypt } =
     useDecryptImages();
 
-  // Initialize
+  // Initialize (if command is called with selected items from Finder)
   const { isLoading: isInitializing } = usePromise(async () => await initialize(), []);
 
   // Error toast
@@ -41,6 +41,6 @@ export default function Command() {
     return <GridRestoredImages manifest={data.manifest} imageBuffers={data.imageBuffers} workdir={data.workdir} />;
   }
 
-  // Default view
+  // Default form view
   return <DecryptImagesFrom />;
 }

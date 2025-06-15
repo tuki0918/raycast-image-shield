@@ -69,6 +69,7 @@ export function useDecryptImages(): UseDecryptImagesResult {
     }
   };
 
+  // Form submit handler
   async function handleSubmit(values: { folders: string[] }) {
     try {
       setIsLoading(true);
