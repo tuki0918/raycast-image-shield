@@ -10,13 +10,13 @@
     {
       "name": "encrypt-images",
       "title": "Encrypt Images",
-      "description": "",
+      "description": "Encrypt images to fragments",
       "mode": "no-view"
     },
     {
       "name": "decrypt-images",
       "title": "Decrypt Images",
-      "description": "",
+      "description": "Decrypt images from fragments",
       "mode": "view"
     }
   ],
