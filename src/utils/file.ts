@@ -11,14 +11,27 @@ export async function createDir(dir: string, recursive = false) {
 }
 
 /**
+ * Check if a directory exists
+ * @param dir Directory path
+ * @returns True if the directory exists, false if it does not
+ */
+export async function exists(dir: string) {
+  return await fs
+    .access(dir)
+    .then(() => true)
+    .catch(() => false);
+}
+
+/**
  * Create a directory if it does not exist
  * @param dir Directory path
  * @returns True if the directory was created, false if it already existed
  */
 export async function createDirIfNotExists(dir: string) {
-  if (await fs.stat(dir).catch(() => false)) {
+  if (await exists(dir)) {
     return;
   }
+
   await createDir(dir, true);
 }
 
