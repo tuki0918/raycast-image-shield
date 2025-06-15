@@ -45,11 +45,7 @@ function DecryptImagesFrom() {
         </ActionPanel>
       }
     >
-      <Form.Description
-        title="How to use"
-        text="1. Select the encrypted images.<br />xxx"
-        // manifest.json + encrypted images
-      />
+      <Form.Description title="How to use" text="Select both manifest.json and the encrypted images." />
       <Form.FilePicker id="folders" allowMultipleSelection={true} canChooseFiles={true} />
     </Form>
   );
