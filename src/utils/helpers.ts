@@ -1,7 +1,7 @@
 import { MANIFEST_FILE_NAME } from "../constraints";
 import { homedir } from "node:os";
-import { createDirIfNotExists, writeFile } from "./file";
-import { join } from "node:path";
+import { createDirIfNotExists, writeFile, exists } from "./file";
+import { dirname, join } from "node:path";
 import { ManifestData } from "image-shield";
 
 export function bufferToDataUrl(buffer: Buffer, mimeType = "image/png") {
@@ -9,7 +9,7 @@ export function bufferToDataUrl(buffer: Buffer, mimeType = "image/png") {
   return `data:${mimeType};base64,${base64}`;
 }
 
-export function findManifestAndImages(filePaths: string[]) {
+export async function findManifestAndImages(filePaths: string[]) {
   const manifestPath = filePaths.find((path: string) => path.endsWith(MANIFEST_FILE_NAME));
   const imagePaths = filePaths.filter((path: string) => path !== manifestPath).sort();
 
@@ -21,9 +21,18 @@ export function findManifestAndImages(filePaths: string[]) {
     throw new Error("Target image files are required");
   }
 
+  for (const filePath of filePaths) {
+    if (!(await exists(filePath))) {
+      throw new Error(`File "${filePath}" does not exist`);
+    }
+  }
+
+  const workdir = dirname(manifestPath);
+
   return {
     manifestPath,
     imagePaths,
+    workdir,
   };
 }
 
