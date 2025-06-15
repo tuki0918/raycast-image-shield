@@ -24,7 +24,7 @@ export default function Command() {
 
   // Loading or initializing
   if (isLoading || isInitializing) {
-    return <GridLoadingView title="decrypting..." />;
+    return <GridLoadingView title="Loading..." />;
   }
 
   // Password form
