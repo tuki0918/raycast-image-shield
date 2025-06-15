@@ -1,27 +1,26 @@
 import { Form, ActionPanel, Action } from "@raycast/api";
-import { useState } from "react";
+import { FormValidation, useForm } from "@raycast/utils";
 
 interface PasswordFormProps {
   onSubmit: (password: string) => void;
 }
 
 function PasswordForm({ onSubmit }: PasswordFormProps) {
-  const [password, setPassword] = useState("");
+  const { handleSubmit, itemProps } = useForm<{ password: string }>({
+    onSubmit: (values) => onSubmit(values.password),
+    validation: {
+      password: FormValidation.Required,
+    },
+  });
   return (
     <Form
       actions={
         <ActionPanel>
-          <Action.SubmitForm title="Decrypt" onSubmit={() => onSubmit(password)} />
+          <Action.SubmitForm title="Decrypt" onSubmit={handleSubmit} />
         </ActionPanel>
       }
     >
-      <Form.PasswordField
-        id="password"
-        title="Password"
-        value={password}
-        onChange={setPassword}
-        placeholder="Enter password"
-      />
+      <Form.PasswordField title="Password" placeholder="Enter password" {...itemProps.password} />
     </Form>
   );
 }
