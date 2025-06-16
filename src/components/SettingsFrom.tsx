@@ -1,6 +1,7 @@
 import { Form, Action, ActionPanel, Toast, showToast } from "@raycast/api";
 import { FormValidation, useForm } from "@raycast/utils";
 import { useState } from "react";
+import { SETTINGS_DEFAULT_BLOCK_SIZE, SETTINGS_DEFAULT_PREFIX } from "../constraints";
 
 export interface SettingsFromValues {
   blockSize: string;
@@ -8,8 +9,8 @@ export interface SettingsFromValues {
 }
 
 export const initialSettings: SettingsFromValues = {
-  blockSize: "8",
-  prefix: "img",
+  blockSize: SETTINGS_DEFAULT_BLOCK_SIZE,
+  prefix: SETTINGS_DEFAULT_PREFIX,
 };
 
 function SettingsFrom({
