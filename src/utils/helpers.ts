@@ -42,7 +42,8 @@ export async function writeRestoredImage(
   fileName: string,
   basePath?: string,
 ) {
-  const dir = basePath ? join(basePath, "restored") : join(homedir(), "Downloads", manifest.id);
-  await createDirIfNotExists(dir);
-  await writeFile(dir, fileName, imageBuffer);
+  const outputDir = `${manifest.id}_restored`;
+  const outputPath = basePath ? join(basePath, outputDir) : join(homedir(), "Downloads", outputDir);
+  await createDirIfNotExists(outputPath);
+  await writeFile(outputPath, fileName, imageBuffer);
 }
