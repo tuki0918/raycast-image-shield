@@ -7,6 +7,11 @@ export async function readManifest(manifestPath: string) {
   return await readJsonFile<ManifestData>(manifestPath);
 }
 
+export function validateEncryptFiles(imagePaths?: string[]) {
+  if (!imagePaths || imagePaths.length === 0) throw new Error("Target image files are required");
+  return { imagePaths };
+}
+
 export function validateDecryptFiles(manifest?: ManifestData, imagePaths?: string[]) {
   if (!manifest) throw new Error(`${MANIFEST_FILE_NAME} is required`);
   if (!imagePaths || imagePaths.length === 0) throw new Error("Target image files are required");

@@ -36,6 +36,24 @@ export async function findManifestAndImages(filePaths: string[]) {
   };
 }
 
+export async function findImages(filePaths: string[]) {
+  const imagePaths = filePaths.sort();
+
+  if (imagePaths.length === 0) {
+    throw new Error("No image files selected.");
+  }
+
+  for (const filePath of filePaths) {
+    if (!(await exists(filePath))) {
+      throw new Error(`"${filePath}" does not exist.`);
+    }
+  }
+
+  return {
+    imagePaths,
+  };
+}
+
 export async function writeRestoredImage(
   manifest: ManifestData,
   imageBuffer: Buffer,
