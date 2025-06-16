@@ -1,4 +1,4 @@
-import { PopToRootType, showHUD, showToast, Toast } from "@raycast/api";
+import { PopToRootType, showHUD } from "@raycast/api";
 import { usePromise } from "@raycast/utils";
 import PasswordForm from "./components/PasswordForm";
 import GridLoadingView from "./components/GridLoadingView";
@@ -9,19 +9,10 @@ import { generateFragmentFileName } from "image-shield/dist/utils/helpers";
 import { writeRestoredImage } from "./utils/helpers";
 
 export default function Command() {
-  const { isLoading, isInstantCall, error, data, selectedFiles, initialize, handleDecrypt } = useDecryptImages();
+  const { isLoading, isInstantCall, data, selectedFiles, initialize, handleDecrypt } = useDecryptImages();
 
   // Initialize (if command is called with selected items from Finder)
   const { isLoading: isInitializing } = usePromise(async () => await initialize(), []);
-
-  // Error toast
-  if (error) {
-    showToast({
-      style: Toast.Style.Failure,
-      title: "Decrypting failed.",
-      message: error,
-    });
-  }
 
   // Loading or initializing
   if (isLoading || isInitializing) {

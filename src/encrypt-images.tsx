@@ -1,4 +1,4 @@
-import { PopToRootType, showHUD, showToast, Toast } from "@raycast/api";
+import { PopToRootType, showHUD } from "@raycast/api";
 import { usePromise } from "@raycast/utils";
 import { useLocalStorage } from "@raycast/utils";
 import EncryptImagesFrom from "./components/EncryptImagesFrom";
@@ -21,20 +21,10 @@ export default function Command() {
 }
 
 function EncryptImages({ settings }: { settings: SettingsFromValues }) {
-  const { isLoading, isInstantCall, error, data, selectedFiles, initialize, handleEncrypt } =
-    useEncryptImages(settings);
+  const { isLoading, isInstantCall, data, selectedFiles, initialize, handleEncrypt } = useEncryptImages(settings);
 
   // Initialize (if command is called with selected items from Finder)
   const { isLoading: isInitializing } = usePromise(async () => await initialize(), []);
-
-  // Error toast
-  if (error) {
-    showToast({
-      style: Toast.Style.Failure,
-      title: "Encrypting failed.",
-      message: error,
-    });
-  }
 
   // Loading or initializing
   if (isLoading || isInitializing) {

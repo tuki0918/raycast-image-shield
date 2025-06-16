@@ -1,4 +1,4 @@
-import { Form, Action, ActionPanel, Toast, showToast } from "@raycast/api";
+import { Form, Action, ActionPanel } from "@raycast/api";
 import GridLoadingView from "./GridLoadingView";
 import GridRestoredImages from "./GridRestoredImages";
 import PasswordForm from "./PasswordForm";
@@ -6,23 +6,13 @@ import { useDecryptImages } from "../hooks/useDecryptImages";
 import { FormValidation, useForm } from "@raycast/utils";
 
 function DecryptImagesFrom() {
-  const { isLoading, error, data, selectedFiles, handleDecrypt, handleFormSubmit } = useDecryptImages();
-
+  const { isLoading, data, selectedFiles, handleDecrypt, handleFormSubmit } = useDecryptImages();
   const { handleSubmit, itemProps } = useForm<{ folders: string[] }>({
     onSubmit: handleFormSubmit,
     validation: {
       folders: FormValidation.Required,
     },
   });
-
-  // Error toast
-  if (error) {
-    showToast({
-      style: Toast.Style.Failure,
-      title: "Decrypting failed.",
-      message: error,
-    });
-  }
 
   // Loading
   if (isLoading) {

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { getSelectedFinderItems } from "@raycast/api";
 import { type ManifestData } from "image-shield";
 import { findManifestAndImages } from "../utils/helpers";
@@ -28,12 +28,18 @@ interface UseDecryptImagesResult {
 }
 
 export function useDecryptImages(): UseDecryptImagesResult {
-  const { isLoading, error, setError, handleError, setIsLoading } = useLoadingState();
+  const { isLoading, error, setError, handleError, setIsLoading, showErrorToast } = useLoadingState();
   const [isInstantCall, setIsInstantCall] = useState(false);
   const [data, setData] = useState<
     { manifest: ManifestData; imageBuffers: Buffer[]; workdir: string | undefined } | undefined
   >();
   const [selectedFiles, setSelectedFiles] = useState<SelectedFiles>({});
+
+  useEffect(() => {
+    if (error) {
+      showErrorToast("Decrypting failed.", error);
+    }
+  }, [error]);
 
   // Initialization logic
   const initialize = async () => {

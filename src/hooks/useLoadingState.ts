@@ -6,7 +6,7 @@ interface UseLoadingStateResult {
   error?: string;
   setError: (err: string | undefined) => void;
   handleError: (e: unknown) => void;
-  showErrorToast: (title: string) => void;
+  showErrorToast: (title: string, message?: string) => void;
   setIsLoading: (loading: boolean) => void;
 }
 
@@ -19,11 +19,11 @@ export function useLoadingState(): UseLoadingStateResult {
     setIsLoading(false);
   };
 
-  const showErrorToast = (title: string) => {
+  const showErrorToast = (title: string, message?: string) => {
     showToast({
       style: Toast.Style.Failure,
       title,
-      message: error,
+      message,
     });
   };
 

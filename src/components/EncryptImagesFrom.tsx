@@ -1,4 +1,4 @@
-import { Form, Action, ActionPanel, Toast, showToast } from "@raycast/api";
+import { Form, Action, ActionPanel } from "@raycast/api";
 import { FormValidation, useForm } from "@raycast/utils";
 import { SettingsFromValues } from "./SettingsFrom";
 import { useEncryptImages } from "../hooks/useEncryptImages";
@@ -13,8 +13,7 @@ export interface EncryptImagesFromValues {
 }
 
 function EncryptImagesFrom({ settings }: { settings: SettingsFromValues }) {
-  const { isLoading, error, data, selectedFiles, handleEncrypt, handleFormSubmit } = useEncryptImages(settings);
-
+  const { isLoading, data, selectedFiles, handleEncrypt, handleFormSubmit } = useEncryptImages(settings);
   const { handleSubmit, itemProps } = useForm<EncryptImagesFromValues>({
     initialValues: {
       folders: [],
@@ -27,15 +26,6 @@ function EncryptImagesFrom({ settings }: { settings: SettingsFromValues }) {
       encrypted: FormValidation.Required,
     },
   });
-
-  // Error toast
-  if (error) {
-    showToast({
-      style: Toast.Style.Failure,
-      title: "Encrypting failed.",
-      message: error,
-    });
-  }
 
   // Loading
   if (isLoading) {
