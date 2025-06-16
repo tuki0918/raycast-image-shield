@@ -23,12 +23,40 @@ export async function exists(dir: string) {
 }
 
 /**
+ * Check if a file exists
+ * @param filePath File path
+ * @returns True if the file exists, false if it does not
+ */
+export async function fileExists(filePath: string) {
+  try {
+    const stats = await fs.stat(filePath);
+    return stats.isFile();
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Check if a directory exists
+ * @param dir Directory path
+ * @returns True if the directory exists, false if it does not
+ */
+export async function dirExists(dir: string) {
+  try {
+    const stats = await fs.stat(dir);
+    return stats.isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Create a directory if it does not exist
  * @param dir Directory path
  * @returns True if the directory was created, false if it already existed
  */
 export async function createDirIfNotExists(dir: string) {
-  if (await exists(dir)) {
+  if (await dirExists(dir)) {
     return;
   }
 
