@@ -11,18 +11,6 @@ export async function createDir(dir: string, recursive = false) {
 }
 
 /**
- * Check if a directory exists
- * @param dir Directory path
- * @returns True if the directory exists, false if it does not
- */
-export async function exists(dir: string) {
-  return await fs
-    .access(dir)
-    .then(() => true)
-    .catch(() => false);
-}
-
-/**
  * Check if a file exists
  * @param filePath File path
  * @returns True if the file exists, false if it does not
