@@ -1,4 +1,4 @@
-import { ImageRestorer, type ManifestData } from "image-shield";
+import { ImageFragmenter, ImageRestorer, type ManifestData, FragmentationConfig } from "image-shield";
 import { readJsonFile } from "image-shield/dist/utils/file";
 import { verifySecretKey } from "image-shield/dist/utils/helpers";
 import { MANIFEST_FILE_NAME } from "../constraints";
@@ -18,6 +18,11 @@ export function validateDecryptFiles(manifest?: ManifestData, imagePaths?: strin
   if (manifest.images.length !== imagePaths.length)
     throw new Error(`Number of image files does not match: ${imagePaths.length} / ${manifest.images.length}`);
   return { manifest, imagePaths };
+}
+
+export async function encryptImagesWithKey(config: FragmentationConfig, imagePaths: string[], secretKey?: string) {
+  const encryptor = new ImageFragmenter(config, verifySecretKey(secretKey));
+  return await encryptor.fragmentImages(imagePaths);
 }
 
 export async function restoreImagesWithKey(imagePaths: string[], manifest: ManifestData, secretKey?: string) {
