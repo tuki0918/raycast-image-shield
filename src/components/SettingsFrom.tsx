@@ -1,16 +1,18 @@
 import { Form, Action, ActionPanel, Toast, showToast } from "@raycast/api";
 import { FormValidation, useForm } from "@raycast/utils";
 import { useState } from "react";
-import { SETTINGS_DEFAULT_BLOCK_SIZE, SETTINGS_DEFAULT_PREFIX } from "../constraints";
+import { SETTINGS_DEFAULT_BLOCK_SIZE, SETTINGS_DEFAULT_ENCRYPTED, SETTINGS_DEFAULT_PREFIX } from "../constraints";
 
 export interface SettingsFromValues {
   blockSize: string;
   prefix: string;
+  encrypted: boolean;
 }
 
 export const initialSettings: SettingsFromValues = {
   blockSize: SETTINGS_DEFAULT_BLOCK_SIZE,
   prefix: SETTINGS_DEFAULT_PREFIX,
+  encrypted: SETTINGS_DEFAULT_ENCRYPTED,
 };
 
 function SettingsFrom({
@@ -46,6 +48,7 @@ function SettingsFrom({
         }
       },
       prefix: FormValidation.Required,
+      encrypted: FormValidation.Required,
     },
   });
 
@@ -69,6 +72,12 @@ function SettingsFrom({
       }
     >
       <Form.Description title="How to use" text={"Please set the default settings for encrypting images."} />
+      <Form.Checkbox
+        title="Encryption Type"
+        label="Shuffle + Encrypt"
+        {...itemProps.encrypted}
+        info="If disabled, images are not encrypted, only shuffled. If enabled, images are encrypted and shuffled."
+      />
       <Form.TextField
         title="Block Size"
         placeholder="Enter block size (8-64)"
