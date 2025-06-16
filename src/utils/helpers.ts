@@ -1,6 +1,6 @@
 import { MANIFEST_FILE_NAME } from "../constraints";
 import { homedir } from "node:os";
-import { createDirIfNotExists, writeFile, exists } from "./file";
+import { createDirIfNotExists, writeFile, fileExists } from "./file";
 import { dirname, join } from "node:path";
 import { ManifestData } from "image-shield";
 
@@ -22,7 +22,7 @@ export async function findManifestAndImages(filePaths: string[]) {
   }
 
   for (const filePath of filePaths) {
-    if (!(await exists(filePath))) {
+    if (!(await fileExists(filePath))) {
       throw new Error(`"${filePath}" does not exist.`);
     }
   }
@@ -44,7 +44,7 @@ export async function findImages(filePaths: string[]) {
   }
 
   for (const filePath of filePaths) {
-    if (!(await exists(filePath))) {
+    if (!(await fileExists(filePath))) {
       throw new Error(`"${filePath}" does not exist.`);
     }
   }
