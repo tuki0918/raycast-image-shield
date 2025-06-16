@@ -11,7 +11,7 @@
       "name": "encrypt-images",
       "title": "Encrypt Images",
       "description": "Encrypt images to fragments",
-      "mode": "no-view"
+      "mode": "view"
     },
     {
       "name": "decrypt-images",
