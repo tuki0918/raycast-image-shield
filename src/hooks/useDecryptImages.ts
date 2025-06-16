@@ -24,7 +24,6 @@ interface UseDecryptImagesResult {
     workdirArg?: string,
     secretKey?: string,
   ) => Promise<void>;
-  setError: (err: string | undefined) => void;
   handleFormSubmit: (values: { folders: string[] }) => Promise<void>;
 }
 
@@ -125,7 +124,6 @@ export function useDecryptImages(): UseDecryptImagesResult {
     selectedFiles,
     initialize,
     handleDecrypt,
-    setError,
     handleFormSubmit,
   };
 }

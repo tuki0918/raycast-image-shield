@@ -26,7 +26,6 @@ interface UseEncryptImagesResult {
   selectedFiles: SelectedFiles;
   initialize: () => Promise<void>;
   handleEncrypt: (imagePathsArg?: string[], workdirArg?: string, secretKey?: string) => Promise<void>;
-  setError: (err: string | undefined) => void;
   handleFormSubmit: (values: EncryptImagesFromValues) => Promise<void>;
 }
 
@@ -144,7 +143,6 @@ export function useEncryptImages(settings: SettingsFromValues): UseEncryptImages
     selectedFiles,
     initialize,
     handleEncrypt,
-    setError,
     handleFormSubmit,
   };
 }
