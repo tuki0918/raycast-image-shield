@@ -62,7 +62,7 @@ export async function writeManifest(manifest: ManifestData, fileName: string, ba
   await writeFile(outputPath, fileName, JSON.stringify(manifest, null, 2));
 }
 
-export async function writeEncryptedImages(
+export async function writeEncryptedImage(
   manifest: ManifestData,
   imageBuffer: Buffer,
   fileName: string,

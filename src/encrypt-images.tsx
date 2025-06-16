@@ -7,7 +7,7 @@ import GridLoadingView from "./components/GridLoadingView";
 import { MANIFEST_FILE_NAME, SETTINGS_KEY } from "./constraints";
 import { initialSettings, SettingsFromValues } from "./components/SettingsFrom";
 import { generateFragmentFileName } from "image-shield/dist/utils/helpers";
-import { writeEncryptedImages, writeManifest } from "./utils/helpers";
+import { writeEncryptedImage, writeManifest } from "./utils/helpers";
 import PasswordForm from "./components/PasswordForm";
 
 export default function Command() {
@@ -60,7 +60,7 @@ function EncryptImages({ settings }: { settings: SettingsFromValues }) {
       await writeManifest(manifest, MANIFEST_FILE_NAME, workdir);
       imageBuffers.forEach(async (imageBuffer, i) => {
         const fileName = generateFragmentFileName(prefix, i, total, { isFragmented: true, isEncrypted: secure });
-        await writeEncryptedImages(manifest, imageBuffer, fileName, workdir);
+        await writeEncryptedImage(manifest, imageBuffer, fileName, workdir);
       });
       await showHUD("🎉 All images encrypted successfully!", {
         clearRootSearch: true,
