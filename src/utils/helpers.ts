@@ -3,7 +3,6 @@ import { homedir } from "node:os";
 import { createDirIfNotExists, writeFile, fileExists } from "./file";
 import { dirname, join } from "node:path";
 import { ManifestData } from "image-shield";
-import { showToast, Toast } from "@raycast/api";
 
 export function bufferToDataUrl(buffer: Buffer, mimeType = "image/png") {
   const base64 = buffer.toString("base64");
@@ -84,12 +83,4 @@ export async function writeRestoredImage(
   const outputPath = basePath ? join(basePath, outputDir) : join(homedir(), "Downloads", outputDir);
   await createDirIfNotExists(outputPath);
   await writeFile(outputPath, fileName, imageBuffer);
-}
-
-export async function showErrorToast(title: string, error: unknown) {
-  await showToast({
-    style: Toast.Style.Failure,
-    title,
-    message: String(error),
-  });
 }

@@ -3,6 +3,7 @@ import { getSelectedFinderItems } from "@raycast/api";
 import { type ManifestData } from "image-shield";
 import { findManifestAndImages } from "../utils/helpers";
 import { readManifest, restoreImagesWithKey, validateDecryptFiles } from "../lib/imageShield";
+import { useLoadingState } from "./useLoadingState";
 
 interface SelectedFiles {
   workdir?: string;
@@ -28,19 +29,12 @@ interface UseDecryptImagesResult {
 }
 
 export function useDecryptImages(): UseDecryptImagesResult {
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, error, setError, handleError, setIsLoading } = useLoadingState();
   const [isInstantCall, setIsInstantCall] = useState(false);
-  const [error, setError] = useState<string | undefined>();
   const [data, setData] = useState<
     { manifest: ManifestData; imageBuffers: Buffer[]; workdir: string | undefined } | undefined
   >();
   const [selectedFiles, setSelectedFiles] = useState<SelectedFiles>({});
-
-  // Error handler
-  const handleError = (e: unknown) => {
-    setError(String(e));
-    setIsLoading(false);
-  };
 
   // Initialization logic
   const initialize = async () => {

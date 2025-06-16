@@ -6,6 +6,7 @@ import { encryptImagesWithKey, validateEncryptFiles } from "../lib/imageShield";
 import { SettingsFromValues } from "../components/SettingsFrom";
 import { EncryptImagesFromValues } from "../components/EncryptImagesFrom";
 import { dirExists } from "../utils/file";
+import { useLoadingState } from "./useLoadingState";
 
 interface SelectedFiles {
   workdir?: string;
@@ -30,19 +31,12 @@ interface UseEncryptImagesResult {
 }
 
 export function useEncryptImages(settings: SettingsFromValues): UseEncryptImagesResult {
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, error, setError, handleError, setIsLoading } = useLoadingState();
   const [isInstantCall, setIsInstantCall] = useState(false);
-  const [error, setError] = useState<string | undefined>();
   const [data, setData] = useState<
     { manifest: ManifestData; imageBuffers: Buffer[]; workdir: string | undefined } | undefined
   >();
   const [selectedFiles, setSelectedFiles] = useState<SelectedFiles>({});
-
-  // Error handler
-  const handleError = (e: unknown) => {
-    setError(String(e));
-    setIsLoading(false);
-  };
 
   // Initialization logic
   const initialize = async () => {
