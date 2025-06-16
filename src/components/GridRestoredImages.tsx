@@ -1,7 +1,8 @@
-import { Action, ActionPanel, Grid, Icon, showToast, Toast } from "@raycast/api";
+import { ActionPanel, Grid } from "@raycast/api";
 import { generateFragmentFileName } from "image-shield/dist/utils/helpers";
 import type { ManifestData } from "image-shield";
-import { bufferToDataUrl, writeRestoredImage } from "../utils/helpers";
+import { bufferToDataUrl } from "../utils/helpers";
+import { DownloadAllImagesAction, DownloadImageAction } from "./DownloadAction";
 
 interface GridRestoredImagesProps {
   manifest: ManifestData;
@@ -32,6 +33,7 @@ function GridRestoredImages({ manifest, imageBuffers, workdir }: GridRestoredIma
                   imageBuffer={imageBuffer}
                   fileName={fileName}
                   workdir={workdir}
+                  imageBuffers={imageBuffers}
                 />
                 <DownloadAllImagesAction manifest={manifest} imageBuffers={imageBuffers} workdir={workdir} />
               </ActionPanel>
@@ -44,60 +46,3 @@ function GridRestoredImages({ manifest, imageBuffers, workdir }: GridRestoredIma
 }
 
 export default GridRestoredImages;
-
-function DownloadImageAction({
-  manifest,
-  imageBuffer,
-  fileName,
-  workdir,
-}: {
-  manifest: ManifestData;
-  imageBuffer: Buffer;
-  fileName: string;
-  workdir?: string;
-}) {
-  return (
-    <Action
-      title="Download"
-      icon={{ source: Icon.Download }}
-      onAction={async () => {
-        await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
-        await showToast({
-          title: "Downloaded",
-          message: "Image downloaded successfully.",
-          style: Toast.Style.Success,
-        });
-      }}
-    />
-  );
-}
-
-function DownloadAllImagesAction({
-  manifest,
-  imageBuffers,
-  workdir,
-}: {
-  manifest: ManifestData;
-  imageBuffers: Buffer[];
-  workdir?: string;
-}) {
-  const { prefix } = manifest.config;
-  const total = imageBuffers.length;
-  return (
-    <Action
-      title="Download All"
-      icon={{ source: Icon.Download }}
-      onAction={async () => {
-        imageBuffers.forEach(async (imageBuffer, i) => {
-          const fileName = generateFragmentFileName(prefix, i, total);
-          await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
-        });
-        await showToast({
-          title: "Downloaded",
-          message: "All images downloaded successfully.",
-          style: Toast.Style.Success,
-        });
-      }}
-    />
-  );
-}

@@ -1,0 +1,76 @@
+import { Action, Icon, showToast, Toast } from "@raycast/api";
+import { ManifestData } from "image-shield";
+import { generateFragmentFileName } from "image-shield/dist/utils/helpers";
+import { writeEncryptedImages, writeManifest, writeRestoredImage } from "../utils/helpers";
+import { MANIFEST_FILE_NAME } from "../constraints";
+
+interface DownloadActionProps {
+  manifest: ManifestData;
+  imageBuffers: Buffer[];
+  workdir?: string;
+  isFragmented?: boolean;
+}
+
+export function DownloadAllImagesAction({
+  manifest,
+  imageBuffers,
+  workdir,
+  isFragmented = false,
+}: DownloadActionProps) {
+  const { secure } = manifest;
+  const { prefix } = manifest.config;
+  const total = imageBuffers.length;
+
+  return (
+    <Action
+      title="Download All"
+      icon={{ source: Icon.Download }}
+      onAction={async () => {
+        if (isFragmented) {
+          await writeManifest(manifest, MANIFEST_FILE_NAME, workdir);
+          imageBuffers.forEach(async (imageBuffer, i) => {
+            const fileName = generateFragmentFileName(prefix, i, total, { isFragmented: true, isEncrypted: secure });
+            await writeEncryptedImages(manifest, imageBuffer, fileName, workdir);
+          });
+        } else {
+          imageBuffers.forEach(async (imageBuffer, i) => {
+            const fileName = generateFragmentFileName(prefix, i, total);
+            await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
+          });
+        }
+        await showToast({
+          title: "Downloaded",
+          message: "All files downloaded successfully.",
+          style: Toast.Style.Success,
+        });
+      }}
+    />
+  );
+}
+
+export function DownloadImageAction({
+  manifest,
+  imageBuffer,
+  fileName,
+  workdir,
+  isFragmented = false,
+}: DownloadActionProps & { imageBuffer: Buffer; fileName: string }) {
+  return (
+    <Action
+      title="Download"
+      icon={{ source: Icon.Download }}
+      onAction={async () => {
+        if (isFragmented) {
+          await writeEncryptedImages(manifest, imageBuffer, fileName, workdir);
+        } else {
+          await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
+        }
+        await showToast({
+          title: "Downloaded",
+          message: "Image downloaded successfully.",
+          style: Toast.Style.Success,
+        });
+      }}
+    />
+  );
+}
