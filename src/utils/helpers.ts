@@ -54,6 +54,13 @@ export async function findImages(filePaths: string[]) {
   };
 }
 
+export async function writeManifest(manifest: ManifestData, fileName: string, basePath?: string) {
+  const outputDir = `${manifest.id}`;
+  const outputPath = basePath ? join(basePath, outputDir) : join(homedir(), "Downloads", outputDir);
+  await createDirIfNotExists(outputPath);
+  await writeFile(outputPath, fileName, JSON.stringify(manifest, null, 2));
+}
+
 export async function writeEncryptedImages(
   manifest: ManifestData,
   imageBuffer: Buffer,
