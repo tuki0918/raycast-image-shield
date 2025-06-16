@@ -18,6 +18,12 @@
       "title": "Decrypt Images",
       "description": "Decrypt images from fragments",
       "mode": "view"
+    },
+    {
+      "name": "settings",
+      "title": "Settings",
+      "description": "default settings",
+      "mode": "view"
     }
   ],
   "dependencies": {
