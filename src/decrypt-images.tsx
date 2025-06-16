@@ -44,11 +44,16 @@ export default function Command() {
     const { manifest, imageBuffers, workdir } = data;
     const { prefix } = manifest.config;
     const total = imageBuffers.length;
-    imageBuffers.forEach(async (imageBuffer, i) => {
-      const fileName = generateFragmentFileName(prefix, i, total);
-      await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
-    });
-    showHUD("🎉 All images decrypted successfully!", { clearRootSearch: true, popToRootType: PopToRootType.Immediate });
+    (async () => {
+      imageBuffers.forEach(async (imageBuffer, i) => {
+        const fileName = generateFragmentFileName(prefix, i, total);
+        await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
+      });
+      await showHUD("🎉 All images decrypted successfully!", {
+        clearRootSearch: true,
+        popToRootType: PopToRootType.Immediate,
+      });
+    })();
     return;
   }
 
