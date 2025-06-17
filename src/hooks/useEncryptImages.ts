@@ -15,6 +15,7 @@ interface SelectedFiles {
     blockSize: number;
     prefix: string;
     encrypted: boolean;
+    restoreFileName: boolean;
   };
 }
 
@@ -72,6 +73,7 @@ export function useEncryptImages(settings: SettingsFromValues): UseEncryptImages
           blockSize: Number(settings.blockSize),
           prefix: settings.prefix,
           encrypted: settings.encrypted,
+          restoreFileName: settings.restoreFileName,
         },
       });
       setIsLoading(false);
@@ -107,6 +109,7 @@ export function useEncryptImages(settings: SettingsFromValues): UseEncryptImages
           blockSize: Number(settings.blockSize),
           prefix: settings.prefix,
           encrypted,
+          restoreFileName: settings.restoreFileName,
         },
       });
       setIsLoading(false);
@@ -128,6 +131,7 @@ export function useEncryptImages(settings: SettingsFromValues): UseEncryptImages
           {
             blockSize: Number(settings.blockSize),
             prefix: settings.prefix,
+            restoreFileName: settings.restoreFileName,
           },
           validated.imagePaths,
           secretKey,
