@@ -1,17 +1,17 @@
 import { PopToRootType, showHUD } from "@raycast/api";
 import { usePromise } from "@raycast/utils";
-import { useLocalStorage } from "@raycast/utils";
 import EncryptImagesFrom from "./components/EncryptImagesFrom";
 import { useEncryptImages } from "./hooks/useEncryptImages";
 import GridLoadingView from "./components/GridLoadingView";
-import { MANIFEST_FILE_NAME, SETTINGS_KEY } from "./constraints";
-import { initialSettings, SettingsFromValues } from "./components/SettingsFrom";
+import { MANIFEST_FILE_NAME } from "./constraints";
+import { SettingsFromValues } from "./components/SettingsFrom";
 import { generateFragmentFileName } from "image-shield/dist/utils/helpers";
 import { writeEncryptedImage, writeManifest } from "./utils/helpers";
 import PasswordForm from "./components/PasswordForm";
+import { useSettings } from "./hooks/useSettings";
 
 export default function Command() {
-  const { value: settings, isLoading } = useLocalStorage(SETTINGS_KEY, initialSettings);
+  const { settings, isLoading } = useSettings();
   // Loading
   if (isLoading || !settings) {
     return <GridLoadingView title="Loading..." />;

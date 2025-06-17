@@ -22,8 +22,8 @@ function SettingsFrom({
   reset,
 }: {
   settings: SettingsFromValues;
-  setSettings: (values: SettingsFromValues) => void;
-  reset: () => void;
+  setSettings: (values: SettingsFromValues) => Promise<void>;
+  reset: () => Promise<void>;
 }) {
   const { error, setError, handleError, setIsLoading, showErrorToast } = useLoadingState();
 
@@ -97,12 +97,12 @@ function SettingsFrom({
 
 export default SettingsFrom;
 
-function ResetSettingsAction({ reset }: { reset: () => void }) {
+function ResetSettingsAction({ reset }: { reset: () => Promise<void> }) {
   return (
     <Action
       title="Reset Settings"
       onAction={async () => {
-        reset();
+        await reset();
         await showToast({
           style: Toast.Style.Success,
           title: "Settings reset.",

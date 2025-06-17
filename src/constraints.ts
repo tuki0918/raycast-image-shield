@@ -4,5 +4,5 @@ export const MANIFEST_FILE_NAME = "manifest.json";
 export const SETTINGS_KEY = "settings";
 // default values
 export const SETTINGS_DEFAULT_BLOCK_SIZE = "8";
-export const SETTINGS_DEFAULT_PREFIX = "fragment";
+export const SETTINGS_DEFAULT_PREFIX = "img";
 export const SETTINGS_DEFAULT_ENCRYPTED = true;
