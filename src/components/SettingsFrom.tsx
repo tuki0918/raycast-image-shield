@@ -2,18 +2,25 @@ import { useEffect } from "react";
 import { Form, Action, ActionPanel, Toast, showToast } from "@raycast/api";
 import { FormValidation, useForm } from "@raycast/utils";
 import { useLoadingState } from "../hooks/useLoadingState";
-import { SETTINGS_DEFAULT_BLOCK_SIZE, SETTINGS_DEFAULT_ENCRYPTED, SETTINGS_DEFAULT_PREFIX } from "../constraints";
+import {
+  SETTINGS_DEFAULT_BLOCK_SIZE,
+  SETTINGS_DEFAULT_ENCRYPTED,
+  SETTINGS_DEFAULT_PREFIX,
+  SETTINGS_DEFAULT_RESTORE_FILE_NAME,
+} from "../constraints";
 
 export interface SettingsFromValues {
   blockSize: string;
   prefix: string;
   encrypted: boolean;
+  restoreFileName: boolean;
 }
 
 export const initialSettings: SettingsFromValues = {
   blockSize: SETTINGS_DEFAULT_BLOCK_SIZE,
   prefix: SETTINGS_DEFAULT_PREFIX,
   encrypted: SETTINGS_DEFAULT_ENCRYPTED,
+  restoreFileName: SETTINGS_DEFAULT_RESTORE_FILE_NAME,
 };
 
 function SettingsFrom({
@@ -87,9 +94,15 @@ function SettingsFrom({
       />
       <Form.TextField
         title="Filename Prefix"
-        placeholder="Enter prefix"
+        placeholder="Enter prefix name (e.g. img)"
         {...itemProps.prefix}
         info={`Default: img\nSet the prefix for output filename.`}
+      />
+      <Form.Checkbox
+        title="Restore File Name"
+        label="Original File Name"
+        {...itemProps.restoreFileName}
+        info={`Default: false\nRestore the original file name when decrypting.`}
       />
     </Form>
   );
