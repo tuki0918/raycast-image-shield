@@ -79,12 +79,12 @@ function SettingsFrom({
         </ActionPanel>
       }
     >
-      <Form.Description title="How to use" text={"Please set the default settings for encrypting images."} />
+      <Form.Description title="How to use" text={"Please set the default settings for image encryption."} />
       <Form.Checkbox
-        title="Encryption Type"
+        title="Protection Method"
         label="Shuffle + Encrypt"
         {...itemProps.encrypted}
-        info="If disabled, images are not encrypted, only shuffled. If enabled, images are encrypted and shuffled."
+        info={`Default: true\nIf disabled, images are not encrypted, only shuffled. If enabled, images are encrypted and shuffled.`}
       />
       <Form.TextField
         title="Block Size"
@@ -93,13 +93,13 @@ function SettingsFrom({
         info={`Default: 8\nFragment the image into multiple blocks and shuffle them.`}
       />
       <Form.TextField
-        title="Filename Prefix"
+        title="File Prefix"
         placeholder="Enter prefix name (e.g. img)"
         {...itemProps.prefix}
-        info={`Default: img\nSet the prefix for output filename.`}
+        info={`Default: img\nSet the prefix for encrypted filename.`}
       />
       <Form.Checkbox
-        title="Restore File Name"
+        title="Restore"
         label="Original File Name"
         {...itemProps.restoreFileName}
         info={`Default: false\nRestore the original file name when decrypting.`}
