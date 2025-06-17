@@ -5,7 +5,7 @@ import GridLoadingView from "./components/GridLoadingView";
 import GridRestoredImages from "./components/GridRestoredImages";
 import { useDecryptImages } from "./hooks/useDecryptImages";
 import DecryptImagesFrom from "./components/DecryptImagesFrom";
-import { generateFragmentFileName } from "image-shield/dist/utils/helpers";
+import { generateFragmentFileName, generateRestoredOriginalFileName } from "image-shield/dist/utils/helpers";
 import { writeRestoredImage } from "./utils/helpers";
 
 export default function Command() {
@@ -34,10 +34,11 @@ export default function Command() {
   if (isInstantCall && data) {
     const { manifest, imageBuffers, workdir } = data;
     const { prefix } = manifest.config;
+    const imageInfos = manifest.images;
     const total = imageBuffers.length;
     (async () => {
       imageBuffers.forEach(async (imageBuffer, i) => {
-        const fileName = generateFragmentFileName(prefix, i, total);
+        const fileName = generateRestoredOriginalFileName(imageInfos[i]) ?? generateFragmentFileName(prefix, i, total);
         await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
       });
       await showHUD("🎉 All images decrypted successfully!", {

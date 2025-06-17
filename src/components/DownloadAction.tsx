@@ -1,6 +1,6 @@
 import { Action, Icon, showToast, Toast } from "@raycast/api";
 import { ManifestData } from "image-shield";
-import { generateFragmentFileName } from "image-shield/dist/utils/helpers";
+import { generateFragmentFileName, generateRestoredOriginalFileName } from "image-shield/dist/utils/helpers";
 import { writeEncryptedImage, writeManifest, writeRestoredImage } from "../utils/helpers";
 import { MANIFEST_FILE_NAME } from "../constraints";
 
@@ -34,7 +34,8 @@ export function DownloadAllImagesAction({
           });
         } else {
           imageBuffers.forEach(async (imageBuffer, i) => {
-            const fileName = generateFragmentFileName(prefix, i, total);
+            const imageInfo = manifest.images[i];
+            const fileName = generateRestoredOriginalFileName(imageInfo) ?? generateFragmentFileName(prefix, i, total);
             await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
           });
         }
