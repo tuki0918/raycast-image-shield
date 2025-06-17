@@ -1,6 +1,7 @@
+import { useEffect } from "react";
 import { Form, Action, ActionPanel, Toast, showToast } from "@raycast/api";
 import { FormValidation, useForm } from "@raycast/utils";
-import { useState } from "react";
+import { useLoadingState } from "../hooks/useLoadingState";
 import { SETTINGS_DEFAULT_BLOCK_SIZE, SETTINGS_DEFAULT_ENCRYPTED, SETTINGS_DEFAULT_PREFIX } from "../constraints";
 
 export interface SettingsFromValues {
@@ -24,19 +25,28 @@ function SettingsFrom({
   setSettings: (values: SettingsFromValues) => void;
   reset: () => void;
 }) {
-  const [error, setError] = useState<string | null>(null);
+  const { error, setError, handleError, setIsLoading, showErrorToast } = useLoadingState();
+
+  useEffect(() => {
+    if (error) {
+      showErrorToast("Saving failed.", error);
+    }
+  }, [error]);
 
   const { handleSubmit, itemProps } = useForm<SettingsFromValues>({
     initialValues: settings ?? initialSettings,
     onSubmit: (values) => {
       try {
+        setIsLoading(true);
+        setError(undefined);
         setSettings(values);
+        setIsLoading(false);
         showToast({
           style: Toast.Style.Success,
           title: "Settings saved.",
         });
       } catch (error) {
-        setError(error as string);
+        handleError(error);
       }
     },
     validation: {
@@ -51,15 +61,6 @@ function SettingsFrom({
       encrypted: FormValidation.Required,
     },
   });
-
-  // Error toast
-  if (error) {
-    showToast({
-      style: Toast.Style.Failure,
-      title: "Settings failed.",
-      message: error,
-    });
-  }
 
   // Default view
   return (
