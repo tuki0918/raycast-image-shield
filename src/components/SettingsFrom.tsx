@@ -60,8 +60,8 @@ function SettingsFrom({
       blockSize: (value) => {
         if (!value) return "Block size is required";
         const num = parseInt(value);
-        if (isNaN(num) || num < 8 || num > 64) {
-          return "Block size must be between 8 and 64";
+        if (isNaN(num) || num < 1 || num > 64) {
+          return "Block size must be between 1 and 64";
         }
       },
       prefix: FormValidation.Required,
@@ -88,9 +88,9 @@ function SettingsFrom({
       />
       <Form.TextField
         title="Block Size"
-        placeholder="Enter block size (8-64)"
+        placeholder="Enter block size (1-64)"
         {...itemProps.blockSize}
-        info={`Default: 8\nFragment the image into multiple blocks and shuffle them.`}
+        info={`Default: 4\nFragment the image into multiple blocks and shuffle them.`}
       />
       <Form.TextField
         title="File Prefix"
