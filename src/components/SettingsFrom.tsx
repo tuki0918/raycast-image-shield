@@ -102,7 +102,7 @@ function SettingsFrom({
         title="Restore"
         label="Original File Name"
         {...itemProps.restoreFileName}
-        info={`Default: false\nRestore the original file name when decrypting.`}
+        info={`Default: true\nRestore the original file name when decrypting.`}
       />
     </Form>
   );
