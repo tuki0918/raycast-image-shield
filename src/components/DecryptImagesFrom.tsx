@@ -23,6 +23,7 @@ function DecryptImagesFrom() {
   if (selectedFiles.manifest?.secure && !data) {
     return (
       <PasswordForm
+        actionTitle="Decrypt"
         onSubmit={(secretKey) =>
           handleDecrypt(selectedFiles.manifest, selectedFiles.imagePaths, selectedFiles.workdir, secretKey)
         }

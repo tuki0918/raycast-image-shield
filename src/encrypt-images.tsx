@@ -35,6 +35,7 @@ function EncryptImages({ settings }: { settings: SettingsFromValues }) {
   if (selectedFiles.config?.encrypted && !data) {
     return (
       <PasswordForm
+        actionTitle="Encrypt"
         onSubmit={(secretKey) => handleEncrypt(selectedFiles.imagePaths, selectedFiles.workdir, secretKey)}
       />
     );
