@@ -65,7 +65,7 @@ function EncryptImagesFrom({ settings }: { settings: SettingsFromValues }) {
         info="Select images to encrypt."
       />
       <Form.Checkbox
-        title="Encryption Type"
+        title="Protection Method"
         label="Shuffle + Encrypt"
         {...itemProps.encrypted}
         info="If disabled, images are not encrypted, only shuffled. If enabled, images are encrypted and shuffled."
