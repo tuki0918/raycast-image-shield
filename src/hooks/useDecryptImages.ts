@@ -1,9 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
-import { getSelectedFinderItems } from "@raycast/api";
+import { getSelectedFinderItems, PopToRootType, showHUD } from "@raycast/api";
 import { type ManifestData } from "image-shield";
 import { findManifestAndImages } from "../utils/helpers";
 import { readManifest, restoreImagesWithKey, validateDecryptFiles } from "../lib/imageShield";
 import { useLoadingState } from "./useLoadingState";
+import { generateFragmentFileName, generateRestoredOriginalFileName } from "image-shield/dist/utils/helpers";
+import { writeRestoredImage } from "../utils/helpers";
 
 interface SelectedFiles {
   workdir?: string;
@@ -40,6 +42,29 @@ export function useDecryptImages(): UseDecryptImagesResult {
       showErrorToast("Decrypting failed.", error);
     }
   }, [error]);
+
+  // Handle instant call for decrypted images
+  const handleInstantCall = useCallback(async () => {
+    if (isInstantCall && data) {
+      const { manifest, imageBuffers, workdir } = data;
+      const { prefix } = manifest.config;
+      const imageInfos = manifest.images;
+      const total = imageBuffers.length;
+
+      imageBuffers.forEach(async (imageBuffer, i) => {
+        const fileName = generateRestoredOriginalFileName(imageInfos[i]) ?? generateFragmentFileName(prefix, i, total);
+        await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
+      });
+      await showHUD("🎉 All images decrypted successfully!", {
+        clearRootSearch: true,
+        popToRootType: PopToRootType.Immediate,
+      });
+    }
+  }, [isInstantCall, data]);
+
+  useEffect(() => {
+    handleInstantCall();
+  }, [handleInstantCall]);
 
   // Initialization logic
   const initialize = async () => {

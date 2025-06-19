@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { getSelectedFinderItems } from "@raycast/api";
+import { getSelectedFinderItems, PopToRootType, showHUD } from "@raycast/api";
 import { type ManifestData } from "image-shield";
 import { findImages } from "../utils/helpers";
 import { encryptImagesWithKey, validateEncryptFiles } from "../lib/imageShield";
@@ -7,6 +7,9 @@ import { SettingsFromValues } from "../components/SettingsFrom";
 import { EncryptImagesFromValues } from "../components/EncryptImagesFrom";
 import { dirExists } from "../utils/file";
 import { useLoadingState } from "./useLoadingState";
+import { MANIFEST_FILE_NAME } from "../constraints";
+import { generateFragmentFileName } from "image-shield/dist/utils/helpers";
+import { writeEncryptedImage, writeManifest } from "../utils/helpers";
 
 interface SelectedFiles {
   workdir?: string;
@@ -43,6 +46,30 @@ export function useEncryptImages(settings: SettingsFromValues): UseEncryptImages
       showErrorToast("Encrypting failed.", error);
     }
   }, [error]);
+
+  // Handle instant call for encrypted images
+  const handleInstantCall = useCallback(async () => {
+    if (isInstantCall && data) {
+      const { manifest, imageBuffers, workdir } = data;
+      const { secure } = manifest;
+      const { prefix } = manifest.config;
+      const total = imageBuffers.length;
+
+      await writeManifest(manifest, MANIFEST_FILE_NAME, workdir);
+      imageBuffers.forEach(async (imageBuffer, i) => {
+        const fileName = generateFragmentFileName(prefix, i, total, { isFragmented: true, isEncrypted: secure });
+        await writeEncryptedImage(manifest, imageBuffer, fileName, workdir);
+      });
+      await showHUD("🎉 All images encrypted successfully!", {
+        clearRootSearch: true,
+        popToRootType: PopToRootType.Immediate,
+      });
+    }
+  }, [isInstantCall, data]);
+
+  useEffect(() => {
+    handleInstantCall();
+  }, [handleInstantCall]);
 
   // Initialization logic
   const initialize = async () => {
