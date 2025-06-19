@@ -1,15 +1,11 @@
-import { Grid, Icon } from "@raycast/api";
+import { Grid } from "@raycast/api";
 
 interface GridLoadingViewProps {
   title?: string;
 }
 
-function GridLoadingView({ title = "Loading..." }: GridLoadingViewProps) {
-  return (
-    <Grid isLoading={true} navigationTitle="Please wait...">
-      <Grid.EmptyView icon={Icon.CircleProgress} title={title} />
-    </Grid>
-  );
+function GridLoadingView({ title = "Please wait..." }: GridLoadingViewProps) {
+  return <Grid isLoading={true} navigationTitle={title} />;
 }
 
 export default GridLoadingView;
