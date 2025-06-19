@@ -1,5 +1,6 @@
 import { PopToRootType, showHUD } from "@raycast/api";
 import { usePromise } from "@raycast/utils";
+import { useEffect } from "react";
 import PasswordForm from "./components/PasswordForm";
 import GridLoadingView from "./components/GridLoadingView";
 import GridRestoredImages from "./components/GridRestoredImages";
@@ -14,9 +15,36 @@ export default function Command() {
   // Initialize (if command is called with selected items from Finder)
   const { isLoading: isInitializing } = usePromise(async () => await initialize(), []);
 
+  // Handle instant call for decrypted images
+  useEffect(() => {
+    if (isInstantCall && data) {
+      const { manifest, imageBuffers, workdir } = data;
+      const { prefix } = manifest.config;
+      const imageInfos = manifest.images;
+      const total = imageBuffers.length;
+
+      (async () => {
+        imageBuffers.forEach(async (imageBuffer, i) => {
+          const fileName =
+            generateRestoredOriginalFileName(imageInfos[i]) ?? generateFragmentFileName(prefix, i, total);
+          await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
+        });
+        await showHUD("🎉 All images decrypted successfully!", {
+          clearRootSearch: true,
+          popToRootType: PopToRootType.Immediate,
+        });
+      })();
+    }
+  }, [isInstantCall, data]);
+
   // Loading or initializing
   if (isLoading || isInitializing) {
     return <GridLoadingView title="Loading..." />;
+  }
+
+  // No GUI for restored images - show loading while processing
+  if (isInstantCall && data) {
+    return <GridLoadingView title="Decrypting images..." />;
   }
 
   // Password form
@@ -29,25 +57,6 @@ export default function Command() {
         }
       />
     );
-  }
-
-  // No GUI for restored images
-  if (isInstantCall && data) {
-    const { manifest, imageBuffers, workdir } = data;
-    const { prefix } = manifest.config;
-    const imageInfos = manifest.images;
-    const total = imageBuffers.length;
-    (async () => {
-      imageBuffers.forEach(async (imageBuffer, i) => {
-        const fileName = generateRestoredOriginalFileName(imageInfos[i]) ?? generateFragmentFileName(prefix, i, total);
-        await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
-      });
-      await showHUD("🎉 All images decrypted successfully!", {
-        clearRootSearch: true,
-        popToRootType: PopToRootType.Immediate,
-      });
-    })();
-    return;
   }
 
   // Restored images grid
