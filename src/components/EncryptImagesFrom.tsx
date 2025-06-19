@@ -29,7 +29,7 @@ function EncryptImagesFrom({ settings }: { settings: SettingsFromValues }) {
 
   // Loading
   if (isLoading) {
-    return <GridLoadingView title="Loading..." />;
+    return <GridLoadingView />;
   }
 
   // Password form

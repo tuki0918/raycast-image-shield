@@ -7,7 +7,7 @@ export default function Command() {
 
   // Loading
   if (isLoading || !settings) {
-    return <GridLoadingView title="Loading..." />;
+    return <GridLoadingView />;
   }
 
   // Default form view

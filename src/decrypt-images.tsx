@@ -39,7 +39,7 @@ export default function Command() {
 
   // Loading or initializing
   if (isLoading || isInitializing) {
-    return <GridLoadingView title="Loading..." />;
+    return <GridLoadingView />;
   }
 
   // No GUI for restored images - show loading while processing

@@ -15,7 +15,7 @@ export default function Command() {
   const { settings, isLoading } = useSettings();
   // Loading
   if (isLoading || !settings) {
-    return <GridLoadingView title="Loading..." />;
+    return <GridLoadingView />;
   }
 
   return <EncryptImages settings={settings} />;
@@ -51,7 +51,7 @@ function EncryptImages({ settings }: { settings: SettingsFromValues }) {
 
   // Loading or initializing
   if (isLoading || isInitializing) {
-    return <GridLoadingView title="Loading..." />;
+    return <GridLoadingView />;
   }
 
   // No GUI for encrypted images - show loading while processing
