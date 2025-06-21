@@ -57,9 +57,10 @@ export async function findImages(filePaths: string[]) {
 
 export async function getSelectedItems(): Promise<string[]> {
   try {
-    return (await getSelectedFinderItems()).map((f) => f.path);
+    return (await getSelectedFinderItems()).map((f) => f.path).sort();
   } catch (e) {
     // Do nothing if no files are selected
+    console.log(e);
     return [];
   }
 }
