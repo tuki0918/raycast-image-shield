@@ -32,7 +32,7 @@
   "dependencies": {
     "@raycast/api": "^1.99.3",
     "@raycast/utils": "^1.17.0",
-    "image-shield": "^0.6.3"
+    "image-shield": "^0.7.0"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^2.0.4",
