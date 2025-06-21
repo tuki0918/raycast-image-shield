@@ -11,7 +11,6 @@ interface GridEncryptedImagesProps {
 }
 
 function GridEncryptedImages({ manifest, imageBuffers, workdir }: GridEncryptedImagesProps) {
-  const { secure } = manifest;
   return (
     <Grid filtering={false} searchText="Encrypted Images" onSearchTextChange={() => {}} inset={Grid.Inset.Small}>
       <Grid.Item
@@ -32,7 +31,7 @@ function GridEncryptedImages({ manifest, imageBuffers, workdir }: GridEncryptedI
         return (
           <Grid.Item
             key={i}
-            content={secure ? Icon.Lock : bufferToDataUrl(imageBuffer)}
+            content={bufferToDataUrl(imageBuffer)}
             title={`#${i + 1}`}
             actions={
               <ActionPanel>

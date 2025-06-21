@@ -1,6 +1,10 @@
 import { Action, Icon, showToast, Toast } from "@raycast/api";
 import { ManifestData } from "image-shield";
-import { generateFragmentFileName, generateRestoredOriginalFileName } from "image-shield/dist/utils/helpers";
+import {
+  generateFragmentFileName,
+  generateRestoredFileName,
+  generateRestoredOriginalFileName,
+} from "image-shield/dist/utils/helpers";
 import { writeEncryptedImage, writeManifest, writeRestoredImage } from "../utils/helpers";
 import { MANIFEST_FILE_NAME } from "../constraints";
 
@@ -17,10 +21,6 @@ export function DownloadAllImagesAction({
   workdir,
   isFragmented = false,
 }: DownloadActionProps) {
-  const { secure } = manifest;
-  const { prefix } = manifest.config;
-  const total = imageBuffers.length;
-
   return (
     <Action
       title="Download All"
@@ -29,13 +29,13 @@ export function DownloadAllImagesAction({
         if (isFragmented) {
           await writeManifest(manifest, MANIFEST_FILE_NAME, workdir);
           imageBuffers.forEach(async (imageBuffer, i) => {
-            const fileName = generateFragmentFileName(prefix, i, total, { isFragmented: true, isEncrypted: secure });
+            const fileName = generateFragmentFileName(manifest, i);
             await writeEncryptedImage(manifest, imageBuffer, fileName, workdir);
           });
         } else {
           imageBuffers.forEach(async (imageBuffer, i) => {
             const imageInfo = manifest.images[i];
-            const fileName = generateRestoredOriginalFileName(imageInfo) ?? generateFragmentFileName(prefix, i, total);
+            const fileName = generateRestoredOriginalFileName(imageInfo) ?? generateRestoredFileName(manifest, i);
             await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
           });
         }

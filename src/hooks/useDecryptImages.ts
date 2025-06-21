@@ -4,7 +4,7 @@ import { type ManifestData } from "image-shield";
 import { findManifestAndImages } from "../utils/helpers";
 import { readManifest, restoreImagesWithKey, validateDecryptFiles } from "../lib/imageShield";
 import { useLoadingState } from "./useLoadingState";
-import { generateFragmentFileName, generateRestoredOriginalFileName } from "image-shield/dist/utils/helpers";
+import { generateRestoredFileName, generateRestoredOriginalFileName } from "image-shield/dist/utils/helpers";
 import { writeRestoredImage } from "../utils/helpers";
 
 interface SelectedFiles {
@@ -47,12 +47,10 @@ export function useDecryptImages(): UseDecryptImagesResult {
   const handleInstantCall = useCallback(async () => {
     if (isInstantCall && data) {
       const { manifest, imageBuffers, workdir } = data;
-      const { prefix } = manifest.config;
       const imageInfos = manifest.images;
-      const total = imageBuffers.length;
 
       imageBuffers.forEach(async (imageBuffer, i) => {
-        const fileName = generateRestoredOriginalFileName(imageInfos[i]) ?? generateFragmentFileName(prefix, i, total);
+        const fileName = generateRestoredOriginalFileName(imageInfos[i]) ?? generateRestoredFileName(manifest, i);
         await writeRestoredImage(manifest, imageBuffer, fileName, workdir);
       });
       await showHUD("🎉 All images decrypted successfully!", {

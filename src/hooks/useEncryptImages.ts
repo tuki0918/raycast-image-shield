@@ -51,13 +51,10 @@ export function useEncryptImages(settings: SettingsFromValues): UseEncryptImages
   const handleInstantCall = useCallback(async () => {
     if (isInstantCall && data) {
       const { manifest, imageBuffers, workdir } = data;
-      const { secure } = manifest;
-      const { prefix } = manifest.config;
-      const total = imageBuffers.length;
 
       await writeManifest(manifest, MANIFEST_FILE_NAME, workdir);
       imageBuffers.forEach(async (imageBuffer, i) => {
-        const fileName = generateFragmentFileName(prefix, i, total, { isFragmented: true, isEncrypted: secure });
+        const fileName = generateFragmentFileName(manifest, i);
         await writeEncryptedImage(manifest, imageBuffer, fileName, workdir);
       });
       await showHUD("🎉 All images encrypted successfully!", {
