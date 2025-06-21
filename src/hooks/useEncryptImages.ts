@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
-import { getSelectedFinderItems, PopToRootType, showHUD } from "@raycast/api";
+import { PopToRootType, showHUD } from "@raycast/api";
 import { type ManifestData } from "image-shield";
-import { findImages } from "../utils/helpers";
+import { findImages, getSelectedItems } from "../utils/helpers";
 import { encryptImagesWithKey, validateEncryptFiles } from "../lib/imageShield";
 import { SettingsFromValues } from "../components/SettingsFrom";
 import { EncryptImagesFromValues } from "../components/EncryptImagesFrom";
@@ -74,7 +74,7 @@ export function useEncryptImages(settings: SettingsFromValues): UseEncryptImages
       setIsLoading(true);
       setError(undefined);
 
-      const filePaths = (await getSelectedFinderItems()).map((f) => f.path);
+      const filePaths = await getSelectedItems();
       if (filePaths.length === 0) {
         setIsLoading(false);
         return;

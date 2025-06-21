@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
-import { getSelectedFinderItems, PopToRootType, showHUD } from "@raycast/api";
+import { PopToRootType, showHUD } from "@raycast/api";
 import { type ManifestData } from "image-shield";
-import { findManifestAndImages } from "../utils/helpers";
+import { findManifestAndImages, getSelectedItems } from "../utils/helpers";
 import { readManifest, restoreImagesWithKey, validateDecryptFiles } from "../lib/imageShield";
 import { useLoadingState } from "./useLoadingState";
 import { generateRestoredFileName, generateRestoredOriginalFileName } from "image-shield/dist/utils/helpers";
@@ -70,7 +70,7 @@ export function useDecryptImages(): UseDecryptImagesResult {
       setIsLoading(true);
       setError(undefined);
 
-      const filePaths = (await getSelectedFinderItems()).map((f) => f.path);
+      const filePaths = await getSelectedItems();
       if (filePaths.length === 0) {
         setIsLoading(false);
         return;

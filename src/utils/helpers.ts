@@ -3,6 +3,7 @@ import { homedir } from "node:os";
 import { createDirIfNotExists, writeFile, fileExists } from "./file";
 import { dirname, join } from "node:path";
 import { ManifestData } from "image-shield";
+import { getSelectedFinderItems } from "@raycast/api";
 
 export function bufferToDataUrl(buffer: Buffer, mimeType = "image/png") {
   const base64 = buffer.toString("base64");
@@ -52,6 +53,15 @@ export async function findImages(filePaths: string[]) {
   return {
     imagePaths,
   };
+}
+
+export async function getSelectedItems(): Promise<string[]> {
+  try {
+    return (await getSelectedFinderItems()).map((f) => f.path);
+  } catch (e) {
+    // Do nothing if no files are selected
+    return [];
+  }
 }
 
 export async function writeManifest(manifest: ManifestData, fileName: string, basePath?: string) {
