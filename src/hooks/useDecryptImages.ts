@@ -139,6 +139,12 @@ export function useDecryptImages(): UseDecryptImagesResult {
         setData({ manifest: validated.manifest, imageBuffers, workdir });
         setIsLoading(false);
       } catch (e) {
+        console.error(e);
+        if (e instanceof Error && e.message.includes("error:1C800064") && e.message.includes("bad decrypt")) {
+          const errorMessage = "Invalid key or selected files.";
+          handleError(errorMessage);
+          return;
+        }
         handleError(e);
       }
     },
