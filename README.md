@@ -12,14 +12,9 @@ This extension provides functionality for image encryption and decryption.
 
 This extension provides two main modes for image encryption:
 
-- **Shuffle + Encrypt**: Both shuffling and encryption are performed
+- **Shuffle + Encrypt**: Both shuffling and encryption (AES) are performed
 - **Shuffle Only**: Only shuffling is performed (no encryption)
 
-#### 🔐 Shuffle + Encrypt (Default Mode)
+## How to use
 
-![](.docs/instantcall_shuffle_encrypt.gif)
-
-#### 🔀 Shuffle Only
-
-![](.docs/instantcall_shuffle.gif)
-
+![](.docs/howto_instantcall.gif)
