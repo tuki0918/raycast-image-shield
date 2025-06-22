@@ -42,6 +42,10 @@ This extension provides two main security modes for image protection:
 
 - Please change the block size to a larger value in the settings.
 
+## Dependencies
+
+- [image-shield](https://github.com/tuki0918/image-shield)
+
 ## Contributing
 
 Contributions are welcome! Feel free to open issues or submit pull requests to improve the extension.
