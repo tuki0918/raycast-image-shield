@@ -1,15 +1,14 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/tuki0918/raycast-image-shield/refs/heads/main/assets/extension-icon.png" alt="Image Shield Icon" width="100" height="100">
-  <h1 align="center" style="border-bottom: none;">Image Shield</h1>
-  <p><em>Secure your images with advanced encryption and fragmentation</em></p>
+  <img src="https://raw.githubusercontent.com/tuki0918/raycast-image-shield/refs/heads/main/assets/extension-icon.png" alt="Image Shield Icon" width="128" height="128">
+  <h1 align="center">Image Shield</h1>
 </div>
 
 This Raycast extension provides functionality for image encryption and decryption, helping you protect confidential images by transforming them into encrypted fragments using AES-256 encryption.
 
 ## Commands
 
-- `Encrypt Images` ... Encrypt your images into secure fragments
-- `Decrypt Images` ... Restore your original images from the fragments
+- `Encrypt Images` ... Encrypt images into secure fragments
+- `Decrypt Images` ... Restore original images from the fragments
 - `Settings` ... Default settings
 
 ## Features
