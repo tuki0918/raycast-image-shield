@@ -16,14 +16,12 @@ function GridRestoredImages({ manifest, imageBuffers, workdir }: GridRestoredIma
       {imageBuffers.map((imageBuffer, i) => {
         const imageInfo = manifest.images[i];
         const fileName = generateRestoredOriginalFileName(imageInfo) ?? generateRestoredFileName(manifest, i);
-        const { w, h } = imageInfo;
-        const subtitle = w && h ? `${w} x ${h}` : "";
         return (
           <Grid.Item
             key={i}
             content={bufferToDataUrl(imageBuffer)}
             title={fileName}
-            subtitle={subtitle}
+            subtitle={`#${i + 1}`}
             actions={
               <ActionPanel>
                 <DownloadImageAction
