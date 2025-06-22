@@ -2,11 +2,11 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "image-shield",
   "title": "Image Shield",
-  "description": "This extension provides functionality for image encryption and decryption.",
+  "description": "Protect images with advanced encryption and fragmentation.",
   "icon": "extension-icon.png",
   "author": "tuki0918",
   "categories": [
-    "Security"
+    "Security", "Media"
   ],
   "license": "MIT",
   "commands": [
