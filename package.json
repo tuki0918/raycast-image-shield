@@ -13,13 +13,13 @@
     {
       "name": "encrypt-images",
       "title": "Encrypt Images",
-      "description": "Encrypt images to fragments",
+      "description": "Encrypt images into secure fragments",
       "mode": "view"
     },
     {
       "name": "decrypt-images",
       "title": "Decrypt Images",
-      "description": "Decrypt images from fragments",
+      "description": "Restore original images from the fragments",
       "mode": "view"
     },
     {
