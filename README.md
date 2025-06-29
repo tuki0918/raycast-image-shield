@@ -5,6 +5,10 @@
 
 This Raycast extension provides functionality for image encryption and decryption, helping you protect confidential images by transforming them into encrypted fragments using AES-256 encryption.
 
+<div align="center">
+  <a title="Install image-shield Raycast Extension" href="https://www.raycast.com/tuki0918/image-shield"><img src="https://www.raycast.com/tuki0918/image-shield/install_button@2x.png?v=1.1" height="64" alt="" style="height: 64px;"></a>
+</div>
+
 ## Commands
 
 - `Encrypt Images` ... Encrypt images into secure fragments
