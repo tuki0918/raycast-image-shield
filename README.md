@@ -41,7 +41,8 @@ This extension provides two main security modes for image protection:
 
 ## Preferences
 
-You can customize the extension behavior through the following preferences:
+<details>
+<summary>You can customize the extension behavior through the following preferences:</summary>
 
 ### Image Protection
 - **Type**: Checkbox
@@ -62,6 +63,8 @@ You can customize the extension behavior through the following preferences:
 - **Type**: Checkbox
 - **Default**: `Enabled`
 - **Description**: Restore the original file name when decrypting.
+
+</details>
 
 ## Troubleshooting
 
